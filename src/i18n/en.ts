@@ -67,6 +67,7 @@ export const en = {
   'common.reject': 'Reject',
   'common.suspend': 'Suspend',
   'common.activate': 'Activate',
+  'common.pendingCount': '{{count}} pending',
 
   'a11y.goBack': 'Go back',
   'a11y.close': 'Close',
@@ -88,6 +89,33 @@ export const en = {
   'auth.otpInvalid': 'Enter the 6-digit code to continue.',
   'auth.verify': 'Verify',
   'auth.backToLogin': 'Back to login',
+
+  'date.justNow': 'Just now',
+  'date.minAgo': '{{count}} min ago',
+  'date.hoursAgo': '{{count}}h ago',
+  'date.yesterday': 'Yesterday',
+
+  'dashboard.greetingMorning': 'Good morning, {{name}}',
+  'dashboard.greetingAfternoon': 'Good afternoon, {{name}}',
+  'dashboard.greetingEvening': 'Good evening, {{name}}',
+  'dashboard.ordersToday': 'Orders Today',
+  'dashboard.revenueToday': 'Revenue Today',
+  'dashboard.activeRestaurants': 'Active Restaurants',
+  'dashboard.pendingVouchers': 'Pending Vouchers',
+  'dashboard.pendingSubmissions': 'Pending Submissions',
+  'dashboard.unreadContacts': 'Unread Contacts',
+  'dashboard.ordersChart': 'Orders (7 days)',
+  'dashboard.revenueChart': 'Revenue (7 days)',
+  'dashboard.usersChart': 'New Registrations (30 days)',
+  'dashboard.recentActivity': 'Recent Activity',
+  'dashboard.systemStatus': 'System Status',
+  'dashboard.statusApi': 'API',
+  'dashboard.statusWebSocket': 'WebSocket',
+  'dashboard.statusDatabase': 'Database',
+  'dashboard.statusOperational': 'Operational',
+  'dashboard.statusDown': 'Down',
+  'dashboard.activityOrderPlaced': '{{restaurant}} placed order {{orderId}}',
+  'dashboard.activitySubmissionReceived': '{{farmer}} submitted {{product}}',
 } as const;
 
 export type TranslationKey = keyof typeof en;

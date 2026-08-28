@@ -6,14 +6,16 @@ export interface StatCardProps {
   label: string;
   value: string;
   delta?: string;
+  /** Overrides the default "leading minus = chili" delta colour rule — for counts where any nonzero value is itself the alert (e.g. pending items). */
+  deltaTone?: 'ripe' | 'chili';
   icon?: React.ReactNode;
   onPress?: () => void;
 }
 
 /** Dashboard / list-header metric tile. 2-column grid on phone. */
-export function StatCard({ label, value, delta, icon, onPress }: StatCardProps) {
+export function StatCard({ label, value, delta, deltaTone, icon, onPress }: StatCardProps) {
   const { colors } = useTheme();
-  const isPositive = delta ? !delta.trim().startsWith('-') : true;
+  const isPositive = deltaTone ? deltaTone === 'ripe' : delta ? !delta.trim().startsWith('-') : true;
 
   return (
     <Card onPress={onPress} accessibilityLabel={onPress ? `${label}: ${value}` : undefined}>
