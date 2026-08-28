@@ -2,8 +2,12 @@ import type { en as enTable } from './en';
 import { frScreens } from './frScreens';
 import { frUsers } from './frUsers';
 import { frStock } from './frStock';
+import { frMarkets } from './frMarkets';
 
-type ChromeKey = Exclude<keyof typeof enTable, keyof typeof frScreens | keyof typeof frUsers | keyof typeof frStock>;
+type ChromeKey = Exclude<
+  keyof typeof enTable,
+  keyof typeof frScreens | keyof typeof frUsers | keyof typeof frStock | keyof typeof frMarkets
+>;
 
 const frChrome: Record<ChromeKey, string> = {
   'nav.dashboard': 'Tableau de bord',
@@ -90,4 +94,4 @@ const frChrome: Record<ChromeKey, string> = {
   'date.yesterday': 'Hier',
 };
 
-export const fr: Record<keyof typeof enTable, string> = { ...frChrome, ...frScreens, ...frUsers, ...frStock };
+export const fr: Record<keyof typeof enTable, string> = { ...frChrome, ...frScreens, ...frUsers, ...frStock, ...frMarkets };

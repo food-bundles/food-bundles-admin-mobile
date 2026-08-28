@@ -2,8 +2,12 @@ import type { en as enTable } from './en';
 import { rwScreens } from './rwScreens';
 import { rwUsers } from './rwUsers';
 import { rwStock } from './rwStock';
+import { rwMarkets } from './rwMarkets';
 
-type ChromeKey = Exclude<keyof typeof enTable, keyof typeof rwScreens | keyof typeof rwUsers | keyof typeof rwStock>;
+type ChromeKey = Exclude<
+  keyof typeof enTable,
+  keyof typeof rwScreens | keyof typeof rwUsers | keyof typeof rwStock | keyof typeof rwMarkets
+>;
 
 const rwChrome: Record<ChromeKey, string> = {
   'nav.dashboard': 'Ikibaho',
@@ -90,4 +94,4 @@ const rwChrome: Record<ChromeKey, string> = {
   'date.yesterday': 'Ejo hashize',
 };
 
-export const rw: Record<keyof typeof enTable, string> = { ...rwChrome, ...rwScreens, ...rwUsers, ...rwStock };
+export const rw: Record<keyof typeof enTable, string> = { ...rwChrome, ...rwScreens, ...rwUsers, ...rwStock, ...rwMarkets };

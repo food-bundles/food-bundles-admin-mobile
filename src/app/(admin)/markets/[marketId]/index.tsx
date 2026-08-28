@@ -1,12 +1,11 @@
-import { Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Redirect } from 'expo-router';
 
-/** Placeholder. Built out in Phase 10 — Markets. */
+/**
+ * No standalone market detail screen exists in the real dashboard — the
+ * spec only describes the tabbed markets/page.tsx (Markets | Prices |
+ * Analysis | Comparison), which already covers per-market pricing.
+ * Redirects to the tabbed screen instead of duplicating it.
+ */
 export default function MarketDetailScreen() {
-  const { marketId } = useLocalSearchParams<{ marketId: string }>();
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Market {marketId} — Phase 10</Text>
-    </View>
-  );
+  return <Redirect href="/(admin)/markets" />;
 }
