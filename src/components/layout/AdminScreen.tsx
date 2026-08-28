@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTheme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
+import { useNotificationsStore } from '@/stores/notificationsStore';
 import { AdminHeader } from './AdminHeader';
 
 export interface AdminScreenProps {
@@ -14,13 +15,14 @@ export interface AdminScreenProps {
 export function AdminScreen({ title, children }: AdminScreenProps) {
   const { colors } = useTheme();
   const user = useAuthStore((state) => state.user);
+  const unreadCount = useNotificationsStore((state) => state.notifications.filter((n) => !n.read).length);
 
   return (
     <View style={[styles.root, { backgroundColor: colors.oat }]}>
       <AdminHeader
         title={title}
         avatarUri={user?.avatarUri ?? ''}
-        unreadCount={0}
+        unreadCount={unreadCount}
         onBellPress={() => router.push('/(admin)/notifications' as never)}
       />
       <SafeAreaView edges={['bottom']} style={styles.body}>

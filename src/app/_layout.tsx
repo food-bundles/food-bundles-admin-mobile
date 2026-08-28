@@ -12,6 +12,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { hydrateTheme, useTheme } from '@/theme';
 import { hydrateLanguage } from '@/i18n';
+import { InAppBannerHost } from '@/components/notifications/InAppBannerHost';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
@@ -44,6 +45,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(admin)" />
       </Stack>
+      <InAppBannerHost />
     </GestureHandlerRootView>
   );
 }
