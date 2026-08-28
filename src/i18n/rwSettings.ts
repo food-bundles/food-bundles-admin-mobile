@@ -1,0 +1,25 @@
+import type { enSettings } from './enSettings';
+
+export const rwSettings: Record<keyof typeof enSettings, string> = {
+  'settings.copy': 'Koporora',
+  'settings.scanQr': 'Sikana iyi kode QR na porogaramu yawe yo kwemeza.',
+  'settings.enterCode': 'Andika umubare w’imibare 6 kugira ngo wemeze.',
+  'settings.enabled': 'Kwemeza kabiri byakoze.',
+  'settings.otpInvalid': 'Umubare sikwiye. Ongera ugerageze.',
+  'settings.done': 'Byarangiye',
+  'settings.addRecipient': 'Ongeraho ubona amatangazo',
+  'settings.editRecipient': 'Hindura ubona amatangazo',
+  'settings.fieldChannels': 'Imiyoboro',
+  'settings.fieldActive': 'Irakora',
+  'settings.deleteRecipientConfirm': 'Kuraho {{name}} mu babona amatangazo?',
+  'settings.emptyRecipientsTitle': 'Nta babona amatangazo',
+  'settings.emptyRecipientsMessage': 'Ababona amatangazo bazagaragara bamaze kongerwaho.',
+  'settings.channelOrders': 'Ibyatumijwe',
+  'settings.channelVouchers': 'Ivoucher',
+  'settings.channelSubmissions': 'Ibyatanzwe',
+  'settings.channelStock': 'Ububiko',
+  'settings.channelSystem': 'Sisitemu',
+  'settings.channelUsers': 'Abakoresha',
+  'settings.statusActive': 'Irakora',
+  'settings.statusInactive': 'Ntikora',
+};

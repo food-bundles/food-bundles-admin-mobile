@@ -1,0 +1,25 @@
+import type { enSettings } from './enSettings';
+
+export const frSettings: Record<keyof typeof enSettings, string> = {
+  'settings.copy': 'Copier',
+  'settings.scanQr': 'Scannez ce code QR avec votre application d’authentification.',
+  'settings.enterCode': 'Saisissez le code à 6 chiffres pour confirmer.',
+  'settings.enabled': 'L’authentification à deux facteurs est activée.',
+  'settings.otpInvalid': 'Code incorrect. Réessayez.',
+  'settings.done': 'Terminé',
+  'settings.addRecipient': 'Ajouter un destinataire',
+  'settings.editRecipient': 'Modifier le destinataire',
+  'settings.fieldChannels': 'Canaux',
+  'settings.fieldActive': 'Actif',
+  'settings.deleteRecipientConfirm': 'Supprimer {{name}} des destinataires ?',
+  'settings.emptyRecipientsTitle': 'Aucun destinataire',
+  'settings.emptyRecipientsMessage': 'Les destinataires apparaîtront ici une fois ajoutés.',
+  'settings.channelOrders': 'Commandes',
+  'settings.channelVouchers': 'Bons',
+  'settings.channelSubmissions': 'Soumissions',
+  'settings.channelStock': 'Stock',
+  'settings.channelSystem': 'Système',
+  'settings.channelUsers': 'Utilisateurs',
+  'settings.statusActive': 'Actif',
+  'settings.statusInactive': 'Inactif',
+};

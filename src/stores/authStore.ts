@@ -6,6 +6,7 @@ interface AuthState {
   isAuthenticated: boolean;
   signIn: (user: AdminUser) => void;
   signOut: () => void;
+  enableTwoFactor: () => void;
 }
 
 /**
@@ -17,4 +18,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   signIn: (user) => set({ user, isAuthenticated: true }),
   signOut: () => set({ user: null, isAuthenticated: false }),
+  enableTwoFactor: () =>
+    set((state) => (state.user ? { user: { ...state.user, twoFactorEnabled: true } } : state)),
 }));

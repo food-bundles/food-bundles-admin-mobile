@@ -1,10 +1,23 @@
-import { Text, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { space } from '@/theme';
+import { useT } from '@/i18n';
+import { AdminScreen } from '@/components/layout/AdminScreen';
+import { RecipientForm } from './_components/RecipientForm';
 
-/** Placeholder. Built out in Phase 13 — Settings. SUPERUSER only. */
+/** Create notification recipient: same form as edit. */
 export default function CreateNotificationRecipientScreen() {
+  const t = useT();
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Create notification recipient — Phase 13</Text>
-    </View>
+    <AdminScreen title={t('settings.addRecipient')}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <RecipientForm onSubmit={() => router.back()} submitLabel={t('common.save')} />
+      </ScrollView>
+    </AdminScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl },
+});
