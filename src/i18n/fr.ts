@@ -77,4 +77,17 @@ export const fr: Record<keyof typeof enTable, string> = {
   'a11y.nextPage': 'Page suivante',
 
   'pagination.pageOfTotal': 'Page {{page}} sur {{total}}',
+
+  'auth.title': 'FoodBundles Admin',
+  'auth.subtitle': 'Connectez-vous pour gérer commandes, marchés et finances.',
+  'auth.email': 'E-mail',
+  'auth.password': 'Mot de passe',
+  'auth.signIn': 'Se connecter',
+  'auth.invalidCredentials': 'E-mail ou mot de passe incorrect.',
+  'auth.otpTitle': 'Vérification à deux facteurs',
+  'auth.otpSubtitle': 'Saisissez le code à 6 chiffres de votre application d’authentification.',
+  'auth.otpCode': 'Code de vérification',
+  'auth.otpInvalid': 'Saisissez le code à 6 chiffres pour continuer.',
+  'auth.verify': 'Vérifier',
+  'auth.backToLogin': 'Retour à la connexion',
 };

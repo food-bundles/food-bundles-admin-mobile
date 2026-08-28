@@ -75,6 +75,19 @@ export const en = {
   'a11y.nextPage': 'Next page',
 
   'pagination.pageOfTotal': 'Page {{page}} of {{total}}',
+
+  'auth.title': 'FoodBundles Admin',
+  'auth.subtitle': 'Sign in to manage orders, markets, and finances.',
+  'auth.email': 'Email',
+  'auth.password': 'Password',
+  'auth.signIn': 'Sign in',
+  'auth.invalidCredentials': 'Incorrect email or password.',
+  'auth.otpTitle': 'Two-factor verification',
+  'auth.otpSubtitle': 'Enter the 6-digit code from your authenticator app.',
+  'auth.otpCode': 'Verification code',
+  'auth.otpInvalid': 'Enter the 6-digit code to continue.',
+  'auth.verify': 'Verify',
+  'auth.backToLogin': 'Back to login',
 } as const;
 
 export type TranslationKey = keyof typeof en;

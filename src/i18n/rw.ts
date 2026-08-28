@@ -77,4 +77,17 @@ export const rw: Record<keyof typeof enTable, string> = {
   'a11y.nextPage': 'Ipaji ikurikira',
 
   'pagination.pageOfTotal': 'Ipaji ya {{page}} kuri {{total}}',
+
+  'auth.title': 'FoodBundles Admin',
+  'auth.subtitle': 'Injira kugira ngo ucunge ibyatumijwe, amasoko, n’imari.',
+  'auth.email': 'Imeyili',
+  'auth.password': 'Ijambo ry’ibanga',
+  'auth.signIn': 'Injira',
+  'auth.invalidCredentials': 'Imeyili cyangwa ijambo ry’ibanga sibyo.',
+  'auth.otpTitle': 'Kwemeza kabiri',
+  'auth.otpSubtitle': 'Andika umubare w’imibare 6 uva kuri porogaramu yawe yo kwemeza.',
+  'auth.otpCode': 'Umubare wo kwemeza',
+  'auth.otpInvalid': 'Andika umubare w’imibare 6 kugira ngo ukomeze.',
+  'auth.verify': 'Emeza',
+  'auth.backToLogin': 'Subira ku kwinjira',
 };
