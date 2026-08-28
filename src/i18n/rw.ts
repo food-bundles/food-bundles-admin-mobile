@@ -17,6 +17,25 @@ export const rw: Record<keyof typeof enTable, string> = {
   'nav.reports': 'Raporo',
   'nav.settings': 'Igenamiterere',
 
+  'section.financial': 'Imari',
+  'section.operations': 'Ibikorwa',
+
+  'user.restaurants': 'Amaresitora',
+  'user.farmers': 'Abahinzi',
+  'user.affiliators': 'Abafatanyabikorwa',
+  'user.admins': 'Abayobozi',
+  'user.lookup': 'Gushakisha Ukoresha',
+
+  'stock.products': 'Ibicuruzwa',
+  'stock.categories': 'Ibyiciro',
+  'stock.units': 'Ibipimo',
+  'stock.fbReports': 'Raporo za F&B',
+
+  'market.pricing': 'Ibiciro by’Isoko',
+
+  'settings.authenticator': 'Kwemeza Kabiri (2FA)',
+  'settings.notificationRecipients': 'Ababona Amatangazo',
+
   'status.pending': 'Bitegereje',
   'status.confirmed': 'Byemejwe',
   'status.preparing': 'Birategurwa',
@@ -54,4 +73,8 @@ export const rw: Record<keyof typeof enTable, string> = {
   'a11y.goBack': 'Subira inyuma',
   'a11y.close': 'Funga',
   'a11y.openMenu': 'Fungura urutonde',
+  'a11y.prevPage': 'Ipaji ibanziriza',
+  'a11y.nextPage': 'Ipaji ikurikira',
+
+  'pagination.pageOfTotal': 'Ipaji ya {{page}} kuri {{total}}',
 };

@@ -17,6 +17,25 @@ export const fr: Record<keyof typeof enTable, string> = {
   'nav.reports': 'Rapports',
   'nav.settings': 'Paramètres',
 
+  'section.financial': 'Finance',
+  'section.operations': 'Opérations',
+
+  'user.restaurants': 'Restaurants',
+  'user.farmers': 'Agriculteurs',
+  'user.affiliators': 'Affiliés',
+  'user.admins': 'Administrateurs',
+  'user.lookup': 'Recherche d’utilisateur',
+
+  'stock.products': 'Produits',
+  'stock.categories': 'Catégories',
+  'stock.units': 'Unités',
+  'stock.fbReports': 'Rapports F&B',
+
+  'market.pricing': 'Prix du marché',
+
+  'settings.authenticator': 'Authentificateur (2FA)',
+  'settings.notificationRecipients': 'Destinataires des notifications',
+
   'status.pending': 'En attente',
   'status.confirmed': 'Confirmée',
   'status.preparing': 'En préparation',
@@ -54,4 +73,8 @@ export const fr: Record<keyof typeof enTable, string> = {
   'a11y.goBack': 'Retour',
   'a11y.close': 'Fermer',
   'a11y.openMenu': 'Ouvrir le menu',
+  'a11y.prevPage': 'Page précédente',
+  'a11y.nextPage': 'Page suivante',
+
+  'pagination.pageOfTotal': 'Page {{page}} sur {{total}}',
 };

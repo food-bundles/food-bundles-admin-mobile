@@ -15,6 +15,25 @@ export const en = {
   'nav.reports': 'Reports',
   'nav.settings': 'Settings',
 
+  'section.financial': 'Financial',
+  'section.operations': 'Operations',
+
+  'user.restaurants': 'Restaurants',
+  'user.farmers': 'Farmers',
+  'user.affiliators': 'Affiliators',
+  'user.admins': 'Administrators',
+  'user.lookup': 'User Lookup',
+
+  'stock.products': 'Products',
+  'stock.categories': 'Categories',
+  'stock.units': 'Units',
+  'stock.fbReports': 'F&B Reports',
+
+  'market.pricing': 'Market Pricing',
+
+  'settings.authenticator': 'Authenticator (2FA)',
+  'settings.notificationRecipients': 'Notification Recipients',
+
   'status.pending': 'Pending',
   'status.confirmed': 'Confirmed',
   'status.preparing': 'Preparing',
@@ -52,6 +71,10 @@ export const en = {
   'a11y.goBack': 'Go back',
   'a11y.close': 'Close',
   'a11y.openMenu': 'Open menu',
+  'a11y.prevPage': 'Previous page',
+  'a11y.nextPage': 'Next page',
+
+  'pagination.pageOfTotal': 'Page {{page}} of {{total}}',
 } as const;
 
 export type TranslationKey = keyof typeof en;
