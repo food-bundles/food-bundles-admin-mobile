@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -11,6 +12,7 @@ import { MOCK_CAMPAIGNS } from '@/mocks/newsletter';
 
 /** Campaign detail: subject, body, recipient count, open/click rate. */
 export default function CampaignDetailScreen() {
+  useRoleGuard('operations');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const t = useT();

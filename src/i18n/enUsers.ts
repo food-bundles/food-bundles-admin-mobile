@@ -40,6 +40,9 @@ export const enUsers = {
   'farmers.approve': 'Approve farmer',
   'farmers.suspend': 'Suspend farmer',
   'farmers.addProduct': 'Add product',
+  'farmers.fieldFarmName': 'Farm Name',
+  'farmers.fieldFarmType': 'Farm Type',
+  'farmers.fieldLocation': 'Location',
 
   'affiliators.title': 'Affiliators',
   'affiliators.searchPlaceholder': 'Search name or restaurant',

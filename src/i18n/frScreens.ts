@@ -59,6 +59,11 @@ export const frScreens: Record<keyof typeof enScreens, string> = {
   'orders.updateStatus': 'Mettre à jour le statut',
   'orders.contactRestaurant': 'Contacter le restaurant',
   'orders.statusUpdated': 'Statut mis à jour vers {{status}}.',
+  'orders.paymentCash': 'Espèces',
+  'orders.paymentMobileMoney': 'Mobile Money',
+  'orders.paymentCard': 'Carte',
+  'orders.paymentBankTransfer': 'Virement bancaire',
+  'orders.paymentVoucher': 'Bon',
 
   'products.title': 'Produits',
   'products.filterCategory': 'Catégorie',

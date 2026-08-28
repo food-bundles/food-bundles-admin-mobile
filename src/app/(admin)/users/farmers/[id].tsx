@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore } from '@/i18n';
 import { formatDate } from '@/lib/date';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -16,6 +17,7 @@ import { AddFarmerProductSheet } from './_components/AddFarmerProductSheet';
 
 /** Farmer detail: profile photo, personal + farm info, products, submission history, actions. */
 export default function FarmerDetailScreen() {
+  useRoleGuard('usersFarmers');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const t = useT();

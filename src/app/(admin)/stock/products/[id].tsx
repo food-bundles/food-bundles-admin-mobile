@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { MOCK_PRODUCTS, type Product } from '@/mocks/products';
@@ -11,6 +12,7 @@ import { PricingCalculator } from './_components/PricingCalculator';
 
 /** Product detail/edit: full-width photo, all fields editable, stock adjustment, pricing calculator. */
 export default function ProductDetailScreen() {
+  useRoleGuard('stock');
   const { id } = useLocalSearchParams<{ id: string }>();
   const t = useT();
   const baseProduct = useMemo(() => MOCK_PRODUCTS.find((p) => p.id === id), [id]);

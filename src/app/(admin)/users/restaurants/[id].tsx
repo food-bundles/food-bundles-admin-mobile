@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { MOCK_RESTAURANTS, type RestaurantStatus } from '@/mocks/restaurants';
@@ -15,6 +16,7 @@ import { RestaurantVouchersTab } from './_components/RestaurantVouchersTab';
 
 /** Restaurant detail: Info | Orders | Wallet | Affiliators | Vouchers tabs. */
 export default function RestaurantDetailScreen() {
+  useRoleGuard('usersRestaurants');
   const { id } = useLocalSearchParams<{ id: string }>();
   const t = useT();
   const baseRestaurant = useMemo(() => MOCK_RESTAURANTS.find((r) => r.id === id), [id]);

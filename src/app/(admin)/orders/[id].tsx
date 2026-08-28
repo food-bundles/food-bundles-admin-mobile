@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore } from '@/i18n';
 import { formatDate } from '@/lib/date';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -17,6 +18,7 @@ import { OrderActions } from './_components/OrderActions';
 
 /** Order detail: header, status rail, restaurant card, items, totals, payment, address, actions. */
 export default function OrderDetailScreen() {
+  useRoleGuard('orders');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const t = useT();

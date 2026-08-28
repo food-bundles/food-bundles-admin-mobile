@@ -57,6 +57,11 @@ export const enScreens = {
   'orders.updateStatus': 'Update status',
   'orders.contactRestaurant': 'Contact restaurant',
   'orders.statusUpdated': 'Status updated to {{status}}.',
+  'orders.paymentCash': 'Cash',
+  'orders.paymentMobileMoney': 'Mobile Money',
+  'orders.paymentCard': 'Card',
+  'orders.paymentBankTransfer': 'Bank Transfer',
+  'orders.paymentVoucher': 'Voucher',
 
   'products.title': 'Products',
   'products.filterCategory': 'Category',

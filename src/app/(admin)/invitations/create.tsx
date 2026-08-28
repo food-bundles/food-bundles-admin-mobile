@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { useAuthStore } from '@/stores/authStore';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { Input } from '@/components/ui/Input';
@@ -12,6 +13,7 @@ import type { AdminRole } from '@/types/auth';
 
 /** Send invitation: email + role select. Local-only, no real email sent. */
 export default function CreateInvitationScreen() {
+  useRoleGuard('usersAdmins');
   const t = useT();
   const assignerRole = useAuthStore((state) => state.user?.role) ?? 'ADMIN';
   const [email, setEmail] = useState('');

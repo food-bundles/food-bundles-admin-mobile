@@ -2,11 +2,13 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { ProductForm } from './_components/ProductForm';
 
 /** Create product: same form as detail/edit, image upload via expo-image-picker. */
 export default function CreateProductScreen() {
+  useRoleGuard('stock');
   const t = useT();
 
   return (

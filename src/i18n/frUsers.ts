@@ -42,6 +42,9 @@ export const frUsers: Record<keyof typeof enUsers, string> = {
   'farmers.approve': 'Approuver l’agriculteur',
   'farmers.suspend': 'Suspendre l’agriculteur',
   'farmers.addProduct': 'Ajouter un produit',
+  'farmers.fieldFarmName': 'Nom de la ferme',
+  'farmers.fieldFarmType': 'Type de ferme',
+  'farmers.fieldLocation': 'Emplacement',
 
   'affiliators.title': 'Affiliés',
   'affiliators.searchPlaceholder': 'Rechercher nom ou restaurant',

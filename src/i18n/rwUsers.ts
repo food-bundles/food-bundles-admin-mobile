@@ -42,6 +42,9 @@ export const rwUsers: Record<keyof typeof enUsers, string> = {
   'farmers.approve': 'Emeza umuhinzi',
   'farmers.suspend': 'Hagarika umuhinzi',
   'farmers.addProduct': 'Ongeraho igicuruzwa',
+  'farmers.fieldFarmName': 'Izina ry’Umurima',
+  'farmers.fieldFarmType': 'Ubwoko bw’Umurima',
+  'farmers.fieldLocation': 'Aho uherereye',
 
   'affiliators.title': 'Abafatanyabikorwa',
   'affiliators.searchPlaceholder': 'Shakisha izina cyangwa iresitora',

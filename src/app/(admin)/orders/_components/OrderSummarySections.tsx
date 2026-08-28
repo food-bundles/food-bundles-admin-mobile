@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
+import { PAYMENT_METHOD_KEY } from '@/lib/paymentMethodLabel';
 import { Card } from '@/components/ui/Card';
 import type { Order } from '@/mocks/orders';
 
@@ -30,7 +31,7 @@ export function OrderSummarySections({ order }: OrderSummarySectionsProps) {
 
       <Text style={[styles.title, { color: colors.ink }]}>{t('orders.paymentInfo')}</Text>
       <Card>
-        <Row label={t('orders.paymentInfo')} value={order.paymentMethod.replace('_', ' ')} />
+        <Row label={t('orders.paymentInfo')} value={t(PAYMENT_METHOD_KEY[order.paymentMethod])} />
         <Row label={t('orders.paymentReference')} value={order.id} />
       </Card>
 

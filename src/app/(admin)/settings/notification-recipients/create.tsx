@@ -2,11 +2,13 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { RecipientForm } from './_components/RecipientForm';
 
 /** Create notification recipient: same form as edit. */
 export default function CreateNotificationRecipientScreen() {
+  useRoleGuard('settings');
   const t = useT();
 
   return (

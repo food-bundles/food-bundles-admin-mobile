@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore } from '@/i18n';
 import { formatDate } from '@/lib/date';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -13,6 +14,7 @@ import { MOCK_CONTACT_SUBMISSIONS, type ContactStatus } from '@/mocks/contact-su
 
 /** Full message + reply form. Mock: sending a reply updates status to REPLIED locally. */
 export default function ContactSubmissionDetailScreen() {
+  useRoleGuard('operations');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const t = useT();

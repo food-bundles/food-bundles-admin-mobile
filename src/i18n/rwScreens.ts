@@ -59,6 +59,11 @@ export const rwScreens: Record<keyof typeof enScreens, string> = {
   'orders.updateStatus': 'Vugurura imiterere',
   'orders.contactRestaurant': 'Vugana n’iresitora',
   'orders.statusUpdated': 'Imiterere yavuguruwe ku {{status}}.',
+  'orders.paymentCash': 'Amafaranga y’ikiganza',
+  'orders.paymentMobileMoney': 'Amafaranga ya Telefoni',
+  'orders.paymentCard': 'Ikarita',
+  'orders.paymentBankTransfer': 'Kohereza kuri Banki',
+  'orders.paymentVoucher': 'Voucher',
 
   'products.title': 'Ibicuruzwa',
   'products.filterCategory': 'Icyiciro',

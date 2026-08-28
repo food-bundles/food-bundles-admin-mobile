@@ -4,6 +4,7 @@ import { text, useTheme } from '@/theme';
 import { useT, useLanguageStore } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
+import { PAYMENT_METHOD_KEY } from '@/lib/paymentMethodLabel';
 import { DataList } from '@/components/data/DataList';
 import { Card } from '@/components/ui/Card';
 import { MOCK_WALLETS, MOCK_TRANSACTIONS } from '@/mocks/deposits';
@@ -27,7 +28,7 @@ export function WalletsTab() {
               <View style={styles.textCol}>
                 <Text style={[styles.name, { color: colors.ink }]}>{item.restaurantName}</Text>
                 <Text style={[styles.detail, { color: colors.muted }]}>
-                  {t('deposits.defaultMethod')}: {item.defaultPaymentMethod.replace('_', ' ')}
+                  {t('deposits.defaultMethod')}: {t(PAYMENT_METHOD_KEY[item.defaultPaymentMethod])}
                 </Text>
                 {lastTx ? (
                   <Text style={[styles.detail, { color: colors.muted }]}>

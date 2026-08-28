@@ -5,6 +5,7 @@ import { space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
+import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -23,6 +24,7 @@ const ACTION_TITLE_KEY: Record<'APPROVED' | 'REJECTED' | 'VERIFIED', Translation
 
 /** Full submission: farmer photo, product details, quality photos, Approve/Reject with note, Verify (post-approval). */
 export default function FarmerSubmissionDetailScreen() {
+  useRoleGuard('operations');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const t = useT();
