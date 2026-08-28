@@ -1,6 +1,10 @@
 import type { en as enTable } from './en';
+import { frScreens } from './frScreens';
+import { frUsers } from './frUsers';
 
-export const fr: Record<keyof typeof enTable, string> = {
+type ChromeKey = Exclude<keyof typeof enTable, keyof typeof frScreens | keyof typeof frUsers>;
+
+const frChrome: Record<ChromeKey, string> = {
   'nav.dashboard': 'Tableau de bord',
   'nav.orders': 'Commandes',
   'nav.users': 'Utilisateurs',
@@ -79,67 +83,10 @@ export const fr: Record<keyof typeof enTable, string> = {
 
   'pagination.pageOfTotal': 'Page {{page}} sur {{total}}',
 
-  'auth.title': 'FoodBundles Admin',
-  'auth.subtitle': 'Connectez-vous pour gérer commandes, marchés et finances.',
-  'auth.email': 'E-mail',
-  'auth.password': 'Mot de passe',
-  'auth.signIn': 'Se connecter',
-  'auth.invalidCredentials': 'E-mail ou mot de passe incorrect.',
-  'auth.otpTitle': 'Vérification à deux facteurs',
-  'auth.otpSubtitle': 'Saisissez le code à 6 chiffres de votre application d’authentification.',
-  'auth.otpCode': 'Code de vérification',
-  'auth.otpInvalid': 'Saisissez le code à 6 chiffres pour continuer.',
-  'auth.verify': 'Vérifier',
-  'auth.backToLogin': 'Retour à la connexion',
-
   'date.justNow': 'À l’instant',
   'date.minAgo': 'Il y a {{count}} min',
   'date.hoursAgo': 'Il y a {{count}} h',
   'date.yesterday': 'Hier',
-
-  'dashboard.greetingMorning': 'Bonjour, {{name}}',
-  'dashboard.greetingAfternoon': 'Bon après-midi, {{name}}',
-  'dashboard.greetingEvening': 'Bonsoir, {{name}}',
-  'dashboard.ordersToday': 'Commandes du jour',
-  'dashboard.revenueToday': 'Revenus du jour',
-  'dashboard.activeRestaurants': 'Restaurants actifs',
-  'dashboard.pendingVouchers': 'Bons en attente',
-  'dashboard.pendingSubmissions': 'Soumissions en attente',
-  'dashboard.unreadContacts': 'Messages non lus',
-  'dashboard.ordersChart': 'Commandes (7 jours)',
-  'dashboard.revenueChart': 'Revenus (7 jours)',
-  'dashboard.usersChart': 'Nouvelles inscriptions (30 jours)',
-  'dashboard.recentActivity': 'Activité récente',
-  'dashboard.systemStatus': 'État du système',
-  'dashboard.statusApi': 'API',
-  'dashboard.statusWebSocket': 'WebSocket',
-  'dashboard.statusDatabase': 'Base de données',
-  'dashboard.statusOperational': 'Opérationnel',
-  'dashboard.statusDown': 'Hors service',
-  'dashboard.activityOrderPlaced': '{{restaurant}} a passé la commande {{orderId}}',
-  'dashboard.activitySubmissionReceived': '{{farmer}} a soumis {{product}}',
-
-  'orders.title': 'Commandes',
-  'orders.filterAll': 'Toutes',
-  'orders.sortNewest': 'Plus récentes',
-  'orders.sortOldest': 'Plus anciennes',
-  'orders.sortTotalAsc': 'Total ↑',
-  'orders.sortTotalDesc': 'Total ↓',
-  'orders.searchPlaceholder': 'Rechercher par ID ou restaurant',
-  'orders.emptyTitle': 'Aucune commande',
-  'orders.emptyMessage': 'Les commandes apparaîtront ici dès que les restaurants commanderont.',
-  'orders.errorMessage': 'Impossible de charger les commandes.',
-  'orders.detailTitle': 'Commande {{id}}',
-  'orders.restaurantCard': 'Restaurant',
-  'orders.itemsSection': 'Articles',
-  'orders.subtotal': 'Sous-total',
-  'orders.delivery': 'Livraison',
-  'orders.vat': 'TVA (18 %)',
-  'orders.total': 'Total',
-  'orders.paymentInfo': 'Paiement',
-  'orders.paymentReference': 'Référence',
-  'orders.deliveryAddress': 'Adresse de livraison',
-  'orders.updateStatus': 'Mettre à jour le statut',
-  'orders.contactRestaurant': 'Contacter le restaurant',
-  'orders.statusUpdated': 'Statut mis à jour vers {{status}}.',
 };
+
+export const fr: Record<keyof typeof enTable, string> = { ...frChrome, ...frScreens, ...frUsers };
