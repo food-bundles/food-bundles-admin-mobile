@@ -1,10 +1,8 @@
 import { Redirect } from 'expo-router';
+import { useAuthStore } from '@/stores/authStore';
 
-/**
- * Root entry redirect. Phase 0 placeholder — always routes to the
- * dashboard. Phase 3 replaces this with an authStore-aware redirect
- * to (auth)/login when there is no active session.
- */
+/** Root entry redirect: dashboard if signed in, login otherwise. */
 export default function Index() {
-  return <Redirect href="/(admin)/dashboard" />;
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  return <Redirect href={isAuthenticated ? '/(admin)/dashboard' : '/(auth)/login'} />;
 }
