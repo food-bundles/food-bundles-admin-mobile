@@ -1,10 +1,12 @@
-import { Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
 
-/** Placeholder. Built out in Phase 9 — Stock (reports section). */
+/**
+ * No distinct "Reports" screen spec exists anywhere in the skills — the
+ * navigation skill lists this route but the drawer's visible section list
+ * (component-library skill) has no matching item, and `stock/fb-reports`
+ * is the only reports screen with a real spec. Redirects there instead of
+ * building a duplicate.
+ */
 export default function ReportsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Reports — Phase 9</Text>
-    </View>
-  );
+  return <Redirect href="/(admin)/stock/fb-reports" />;
 }

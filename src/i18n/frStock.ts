@@ -1,0 +1,35 @@
+import type { enStock } from './enStock';
+
+export const frStock: Record<keyof typeof enStock, string> = {
+  'categories.title': 'Catégories',
+  'categories.emptyTitle': 'Aucune catégorie',
+  'categories.emptyMessage': 'Les catégories apparaîtront ici une fois ajoutées.',
+  'categories.productCount': '{{count}} produits',
+  'categories.create': 'Ajouter une catégorie',
+  'categories.deleteConfirm': 'Supprimer {{name}} des catégories ?',
+
+  'units.title': 'Unités',
+  'units.emptyTitle': 'Aucune unité',
+  'units.emptyMessage': 'Les unités apparaîtront ici une fois ajoutées.',
+  'units.productCount': '{{count}} produits',
+  'units.create': 'Ajouter une unité',
+  'units.deleteConfirm': 'Supprimer {{name}} des unités ?',
+  'units.fieldAbbreviation': 'Abréviation',
+
+  'fbReports.title': 'Rapports F&B',
+  'fbReports.dateRangeThisWeek': 'Cette semaine',
+  'fbReports.dateRangeThisMonth': 'Ce mois-ci',
+  'fbReports.dateRangeCustom': 'Personnalisé',
+  'fbReports.reportType': 'Type de rapport',
+  'fbReports.typeSalesSummary': 'Résumé des ventes',
+  'fbReports.typeStockMovement': 'Mouvement de stock',
+  'fbReports.typeMarketComparison': 'Comparaison de marché',
+  'fbReports.generate': 'Générer',
+  'fbReports.from': 'Du',
+  'fbReports.to': 'Au',
+  'fbReports.done': 'Terminé',
+  'fbReports.summaryTitle': 'Résumé',
+  'fbReports.totalOrders': 'Total des commandes',
+  'fbReports.totalRevenue': 'Revenu total',
+  'fbReports.avgOrderValue': 'Valeur moyenne des commandes',
+};

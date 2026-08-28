@@ -1,5 +1,6 @@
 import { enScreens } from './enScreens';
 import { enUsers } from './enUsers';
+import { enStock } from './enStock';
 
 const enChrome = {
   'nav.dashboard': 'Dashboard',
@@ -86,6 +87,6 @@ const enChrome = {
   'date.yesterday': 'Yesterday',
 } as const;
 
-export const en = { ...enChrome, ...enScreens, ...enUsers };
+export const en = { ...enChrome, ...enScreens, ...enUsers, ...enStock };
 
 export type TranslationKey = keyof typeof en;

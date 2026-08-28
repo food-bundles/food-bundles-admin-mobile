@@ -1,0 +1,35 @@
+import type { enStock } from './enStock';
+
+export const rwStock: Record<keyof typeof enStock, string> = {
+  'categories.title': 'Ibyiciro',
+  'categories.emptyTitle': 'Nta byiciro',
+  'categories.emptyMessage': 'Ibyiciro bizagaragara byongewe.',
+  'categories.productCount': 'Ibicuruzwa {{count}}',
+  'categories.create': 'Ongeraho icyiciro',
+  'categories.deleteConfirm': 'Kuraho {{name}} mu byiciro?',
+
+  'units.title': 'Ibipimo',
+  'units.emptyTitle': 'Nta bipimo',
+  'units.emptyMessage': 'Ibipimo bizagaragara byongewe.',
+  'units.productCount': 'Ibicuruzwa {{count}}',
+  'units.create': 'Ongeraho igipimo',
+  'units.deleteConfirm': 'Kuraho {{name}} mu bipimo?',
+  'units.fieldAbbreviation': 'Ikimenyetso',
+
+  'fbReports.title': 'Raporo za F&B',
+  'fbReports.dateRangeThisWeek': 'Iki cyumweru',
+  'fbReports.dateRangeThisMonth': 'Uku kwezi',
+  'fbReports.dateRangeCustom': 'Guhitamo',
+  'fbReports.reportType': 'Ubwoko bwa raporo',
+  'fbReports.typeSalesSummary': 'Incamake y’Ibyagurishijwe',
+  'fbReports.typeStockMovement': 'Imigenderanire y’Ububiko',
+  'fbReports.typeMarketComparison': 'Ugereranya Amasoko',
+  'fbReports.generate': 'Kora Raporo',
+  'fbReports.from': 'Kuva',
+  'fbReports.to': 'Kugeza',
+  'fbReports.done': 'Byarangiye',
+  'fbReports.summaryTitle': 'Incamake',
+  'fbReports.totalOrders': 'Igiteranyo cy’Ibyatumijwe',
+  'fbReports.totalRevenue': 'Igiteranyo cy’Amafaranga',
+  'fbReports.avgOrderValue': 'Impuzandengo y’Ikiguzi',
+};
