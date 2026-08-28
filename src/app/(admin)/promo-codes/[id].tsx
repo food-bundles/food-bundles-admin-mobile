@@ -1,12 +1,36 @@
-import { Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useMemo } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { space } from '@/theme';
+import { useT } from '@/i18n';
+import { AdminScreen } from '@/components/layout/AdminScreen';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { MOCK_PROMO_CODES } from '@/mocks/promo-codes';
+import { PromoCodeForm } from './_components/PromoCodeForm';
 
-/** Placeholder. Built out in Phase 12 — Operations. */
+/** Edit promo code: same form as create, pre-filled. */
 export default function PromoCodeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const t = useT();
+  const code = useMemo(() => MOCK_PROMO_CODES.find((c) => c.id === id), [id]);
+
+  if (!code) {
+    return (
+      <AdminScreen title={t('promoCodes.title')}>
+        <EmptyState icon={null} title={t('promoCodes.emptyTitle')} message={t('promoCodes.emptyMessage')} />
+      </AdminScreen>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Promo code {id} — Phase 12</Text>
-    </View>
+    <AdminScreen title={t('promoCodes.editTitle')}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <PromoCodeForm initial={code} onSubmit={() => router.back()} submitLabel={t('common.save')} />
+      </ScrollView>
+    </AdminScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl },
+});

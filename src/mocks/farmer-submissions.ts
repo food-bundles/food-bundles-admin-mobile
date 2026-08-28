@@ -13,6 +13,7 @@ export interface FarmerSubmission {
   reviewedAt: string | null;
   reviewerId: string | null;
   note: string | null;
+  status: SubmissionStatus;
 }
 
 /** 10 submissions: mix of PENDING, APPROVED, REJECTED, VERIFIED. Cross-references farmers.ts/categories.ts. */
@@ -30,6 +31,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-08-20T12:00:00Z',
     reviewerId: 'admin-003',
     note: 'Quality confirmed at intake.',
+    status: 'APPROVED',
   },
   {
     id: 'fsub-002',
@@ -44,6 +46,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: null,
     reviewerId: null,
     note: null,
+    status: 'PENDING',
   },
   {
     id: 'fsub-003',
@@ -58,6 +61,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-08-15T15:00:00Z',
     reviewerId: 'admin-003',
     note: 'Verified in warehouse — matches submitted grade.',
+    status: 'VERIFIED',
   },
   {
     id: 'fsub-004',
@@ -72,6 +76,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: null,
     reviewerId: null,
     note: null,
+    status: 'PENDING',
   },
   {
     id: 'fsub-005',
@@ -86,6 +91,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-08-10T10:00:00Z',
     reviewerId: 'admin-002',
     note: 'Approved for standing supply agreement.',
+    status: 'APPROVED',
   },
   {
     id: 'fsub-006',
@@ -100,6 +106,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-07-19T09:00:00Z',
     reviewerId: 'admin-002',
     note: 'Rejected — farmer account suspended for quality issues.',
+    status: 'REJECTED',
   },
   {
     id: 'fsub-007',
@@ -114,6 +121,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-08-06T08:00:00Z',
     reviewerId: 'admin-003',
     note: 'Verified and added to stock.',
+    status: 'VERIFIED',
   },
   {
     id: 'fsub-008',
@@ -128,6 +136,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: null,
     reviewerId: null,
     note: null,
+    status: 'PENDING',
   },
   {
     id: 'fsub-009',
@@ -142,6 +151,7 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: null,
     reviewerId: null,
     note: null,
+    status: 'PENDING',
   },
   {
     id: 'fsub-010',
@@ -156,5 +166,6 @@ export const MOCK_FARMER_SUBMISSIONS: FarmerSubmission[] = [
     reviewedAt: '2026-08-12T13:00:00Z',
     reviewerId: 'admin-003',
     note: 'Approved, priced slightly below standard for bulk order.',
+    status: 'APPROVED',
   },
 ];
