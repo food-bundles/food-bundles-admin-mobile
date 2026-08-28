@@ -1,21 +1,29 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { space, text, useTheme } from '@/theme';
+import { space, text, useTheme, type ColorPalette } from '@/theme';
 import { Card } from './Card';
+
+export type StatCardTone = 'ripe' | 'chili' | 'marigold';
 
 export interface StatCardProps {
   label: string;
   value: string;
   delta?: string;
   /** Overrides the default "leading minus = chili" delta colour rule — for counts where any nonzero value is itself the alert (e.g. pending items). */
-  deltaTone?: 'ripe' | 'chili';
+  deltaTone?: StatCardTone;
   icon?: React.ReactNode;
   onPress?: () => void;
 }
 
+const TONE_COLOR: Record<StatCardTone, keyof ColorPalette> = {
+  ripe: 'ripe',
+  chili: 'chili',
+  marigold: 'marigold',
+};
+
 /** Dashboard / list-header metric tile. 2-column grid on phone. */
 export function StatCard({ label, value, delta, deltaTone, icon, onPress }: StatCardProps) {
   const { colors } = useTheme();
-  const isPositive = deltaTone ? deltaTone === 'ripe' : delta ? !delta.trim().startsWith('-') : true;
+  const tone: StatCardTone = deltaTone ?? (delta?.trim().startsWith('-') ? 'chili' : 'ripe');
 
   return (
     <Card onPress={onPress} accessibilityLabel={onPress ? `${label}: ${value}` : undefined}>
@@ -24,9 +32,7 @@ export function StatCard({ label, value, delta, deltaTone, icon, onPress }: Stat
         {icon}
       </View>
       <Text style={[styles.value, { color: colors.ink }]}>{value}</Text>
-      {delta ? (
-        <Text style={[styles.delta, { color: isPositive ? colors.ripe : colors.chili }]}>{delta}</Text>
-      ) : null}
+      {delta ? <Text style={[styles.delta, { color: colors[TONE_COLOR[tone]] }]}>{delta}</Text> : null}
     </Card>
   );
 }

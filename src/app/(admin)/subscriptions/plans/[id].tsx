@@ -1,12 +1,10 @@
-import { Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Redirect } from 'expo-router';
 
-/** Placeholder. Built out in Phase 11 — Financial. */
+/**
+ * No standalone plan detail screen exists in the real dashboard — the
+ * tabbed subscriptions/page.tsx already covers plan editing. Redirects
+ * there instead of duplicating it.
+ */
 export default function PlanDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Plan {id} — Phase 11</Text>
-    </View>
-  );
+  return <Redirect href="/(admin)/subscriptions" />;
 }

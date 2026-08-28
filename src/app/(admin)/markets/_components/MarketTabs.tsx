@@ -1,6 +1,5 @@
-import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
-import { hit, radius, space, text, useTheme } from '@/theme';
 import { useT, type TranslationKey } from '@/i18n';
+import { SegmentedTabs } from '@/components/ui/SegmentedTabs';
 
 export type MarketTabKey = 'markets' | 'prices' | 'analysis' | 'comparison';
 
@@ -20,31 +19,6 @@ export interface MarketTabsProps {
 
 /** Top segmented control: Markets | Prices | Analysis | Comparison. */
 export function MarketTabs({ active, onChange }: MarketTabsProps) {
-  const { colors } = useTheme();
   const t = useT();
-
-  return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-      {TABS.map((tab) => {
-        const isActive = tab === active;
-        return (
-          <Pressable
-            key={tab}
-            accessibilityRole="button"
-            accessibilityLabel={t(TAB_KEY[tab])}
-            accessibilityState={{ selected: isActive }}
-            onPress={() => onChange(tab)}
-            style={[styles.tab, { backgroundColor: isActive ? colors.leaf : 'transparent' }]}
-          >
-            <Text style={[text.bodySemi, { color: isActive ? colors.paper : colors.body }]}>{t(TAB_KEY[tab])}</Text>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
-  );
+  return <SegmentedTabs items={TABS.map((key) => ({ key, label: t(TAB_KEY[key]) }))} active={active} onChange={onChange} />;
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: space.sm, paddingHorizontal: space.lg, paddingVertical: space.md },
-  tab: { minHeight: hit.min, paddingHorizontal: space.md, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
-});

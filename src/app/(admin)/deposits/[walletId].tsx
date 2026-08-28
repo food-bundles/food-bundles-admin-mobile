@@ -1,12 +1,10 @@
-import { Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Redirect } from 'expo-router';
 
-/** Placeholder. Built out in Phase 11 — Financial. */
+/**
+ * No standalone wallet detail screen exists in the real dashboard — the
+ * tabbed deposits/page.tsx already covers wallets/transactions/
+ * withdrawals/delegation. Redirects there instead of duplicating it.
+ */
 export default function WalletDetailScreen() {
-  const { walletId } = useLocalSearchParams<{ walletId: string }>();
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Wallet {walletId} — Phase 11</Text>
-    </View>
-  );
+  return <Redirect href="/(admin)/deposits" />;
 }

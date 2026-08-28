@@ -1,6 +1,6 @@
 import type { LoanApplication, LoanApplicationStatus, Penalty, VoucherType } from './vouchers';
 
-export type { LoanApplication, LoanApplicationStatus, Penalty };
+export type { LoanApplication, LoanApplicationStatus, Penalty, VoucherType };
 
 /**
  * Loan applications (pre-voucher-issuance stage) and penalties, split out

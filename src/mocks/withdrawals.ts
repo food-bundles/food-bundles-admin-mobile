@@ -1,6 +1,6 @@
-import type { DelegationRecord, Withdrawal } from './deposits';
+import type { DelegationRecord, Withdrawal, WithdrawalStatus } from './deposits';
 
-export type { DelegationRecord, Withdrawal };
+export type { DelegationRecord, Withdrawal, WithdrawalStatus };
 
 /**
  * Withdrawals and delegation records, split out of deposits.ts to stay
