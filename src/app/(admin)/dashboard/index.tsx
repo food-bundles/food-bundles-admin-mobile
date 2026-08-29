@@ -8,6 +8,7 @@ import { DashboardGreeting } from './_components/DashboardGreeting';
 import { QuickStatsGrid } from './_components/QuickStatsGrid';
 import { DashboardCharts } from './_components/DashboardCharts';
 import { RecentActivity } from './_components/RecentActivity';
+import { MarketSummaryWidget } from './_components/MarketSummaryWidget';
 import { SystemStatusRow } from './_components/SystemStatusRow';
 
 /**
@@ -28,6 +29,7 @@ export default function DashboardHome() {
         <QuickStatsGrid metrics={metrics} />
         <DashboardCharts />
         <RecentActivity />
+        <MarketSummaryWidget />
         <SystemStatusRow />
       </ScrollView>
     </AdminScreen>
