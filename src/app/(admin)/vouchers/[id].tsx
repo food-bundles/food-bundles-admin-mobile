@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import { space, text, useTheme } from '@/theme';
-import { useT, useLanguageStore } from '@/i18n';
+import { router, useLocalSearchParams } from 'expo-router';
+import { font, space, text, useTheme } from '@/theme';
+import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { useRoleGuard } from '@/lib/roleGuard';
@@ -14,12 +14,23 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { MOCK_VOUCHERS, type VoucherStatus } from '@/mocks/vouchers';
-import { MOCK_ADMINS } from '@/mocks/admins';
-import { AssignTraderSheet } from './_components/AssignTraderSheet';
+import { MOCK_RESTAURANTS } from '@/mocks/restaurants';
 
 const CAN_MANAGE_ROLES = ['SUPERUSER', 'ADMIN'];
 
-/** Voucher detail: real credit-line model. Assign trader + deactivate (ADMIN+). */
+const STATUS_TONE: Record<VoucherStatus, 'ripe' | 'neutral' | 'chili'> = {
+  AVAILABLE: 'ripe',
+  USED: 'neutral',
+  EXPIRED: 'chili',
+};
+
+const STATUS_KEY: Record<VoucherStatus, TranslationKey> = {
+  AVAILABLE: 'vouchers.statusAvailable',
+  USED: 'vouchers.statusUsed',
+  EXPIRED: 'vouchers.statusExpired',
+};
+
+/** Voucher detail: single-use token model. Restaurant/order links, revoke (AVAILABLE only, ADMIN+). */
 export default function VoucherDetailScreen() {
   useRoleGuard('financial');
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,9 +42,7 @@ export default function VoucherDetailScreen() {
 
   const baseVoucher = useMemo(() => MOCK_VOUCHERS.find((v) => v.id === id), [id]);
   const [statusOverride, setStatusOverride] = useState<VoucherStatus | null>(null);
-  const [assignedTraderId, setAssignedTraderId] = useState<string | null>(null);
-  const [traderSheetOpen, setTraderSheetOpen] = useState(false);
-  const [confirmClose, setConfirmClose] = useState(false);
+  const [confirmRevoke, setConfirmRevoke] = useState(false);
   const voucher = baseVoucher && statusOverride ? { ...baseVoucher, status: statusOverride } : baseVoucher;
 
   if (!voucher) {
@@ -44,61 +53,60 @@ export default function VoucherDetailScreen() {
     );
   }
 
-  const trader = assignedTraderId ? MOCK_ADMINS.find((a) => a.id === assignedTraderId) : null;
+  const restaurant = MOCK_RESTAURANTS.find((r) => r.id === voucher.restaurantId);
 
   return (
     <AdminScreen title={voucher.restaurantName}>
       <ScrollView contentContainerStyle={styles.content}>
         <Card>
+          <Text style={[styles.code, { color: colors.leaf }]}>{voucher.code}</Text>
           <View style={styles.headerRow}>
-            <Text style={[styles.type, { color: colors.ink }]}>{voucher.voucherType.replace('_', ' ')}</Text>
-            <Badge tone={voucher.status === 'ACTIVE' ? 'leaf' : 'chili'} label={voucher.status} />
+            <Text style={[styles.amount, { color: colors.ink }]}>{formatRwf(voucher.amount)}</Text>
+            <Badge tone={STATUS_TONE[voucher.status]} label={t(STATUS_KEY[voucher.status])} />
           </View>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('vouchers.creditLimit')}: {formatRwf(voucher.creditLimit)}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('vouchers.outstandingBalance')}: {formatRwf(voucher.outstandingBalance)}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('vouchers.repaymentDays')}: {voucher.repaymentDays}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>{formatDate(voucher.expiryDate, language)}</Text>
+          <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.issuedOn')}: {formatDate(voucher.issuedAt, language)}</Text>
+          <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.expiresOn')}: {formatDate(voucher.expiresAt, language)}</Text>
+          {voucher.status === 'USED' && voucher.appliedAt ? (
+            <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.usedOn')}: {formatDate(voucher.appliedAt, language)}</Text>
+          ) : null}
         </Card>
 
-        {trader ? (
-          <Card>
-            <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.assignTrader')}</Text>
-            <Text style={[styles.type, { color: colors.ink }]}>{trader.name}</Text>
+        {restaurant ? (
+          <Card onPress={() => router.push(`/(admin)/users/restaurants/${restaurant.id}`)} accessibilityLabel={t('vouchers.viewRestaurant')}>
+            <Text style={[styles.link, { color: colors.leaf }]}>{t('vouchers.viewRestaurant')}</Text>
+            <Text style={[styles.detail, { color: colors.ink }]}>{voucher.restaurantName}</Text>
           </Card>
         ) : null}
 
-        {canManage ? (
-          <View style={styles.actions}>
-            <Button variant="secondary" fullWidth onPress={() => setTraderSheetOpen(true)}>
-              {t('vouchers.assignTrader')}
-            </Button>
-            {voucher.status !== 'DEACTIVATED' ? (
-              <Button variant="destructive" fullWidth onPress={() => setConfirmClose(true)}>
-                {t('vouchers.closeVoucher')}
-              </Button>
-            ) : null}
-          </View>
+        {voucher.status === 'USED' && voucher.orderId ? (
+          <Card onPress={() => router.push(`/(admin)/orders/${voucher.orderId}`)} accessibilityLabel={t('vouchers.viewOrder')}>
+            <Text style={[styles.link, { color: colors.leaf }]}>{t('vouchers.viewOrder')}</Text>
+            <Text style={[styles.detail, { color: colors.ink }]}>{voucher.orderId}</Text>
+          </Card>
+        ) : null}
+
+        <Card>
+          <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.repaymentNotice')}</Text>
+        </Card>
+
+        {canManage && voucher.status === 'AVAILABLE' ? (
+          <Button variant="destructive" fullWidth onPress={() => setConfirmRevoke(true)} accessibilityLabel={t('vouchers.revoke')}>
+            {t('vouchers.revoke')}
+          </Button>
         ) : null}
       </ScrollView>
 
-      <AssignTraderSheet visible={traderSheetOpen} onClose={() => setTraderSheetOpen(false)} onSelect={setAssignedTraderId} />
       <ConfirmDialog
-        visible={confirmClose}
-        title={t('vouchers.closeVoucher')}
-        message={t('vouchers.closeConfirm', { name: voucher.restaurantName })}
+        visible={confirmRevoke}
+        title={t('vouchers.revoke')}
+        message={t('vouchers.revokeConfirm', { name: voucher.restaurantName })}
         confirmLabel={t('common.confirm')}
         variant="danger"
         onConfirm={() => {
-          setStatusOverride('DEACTIVATED');
-          setConfirmClose(false);
+          setStatusOverride('EXPIRED');
+          setConfirmRevoke(false);
         }}
-        onCancel={() => setConfirmClose(false)}
+        onCancel={() => setConfirmRevoke(false)}
       />
     </AdminScreen>
   );
@@ -106,8 +114,9 @@ export default function VoucherDetailScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl, gap: space.md },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  type: { ...text.h3 },
+  code: { ...text.h2, fontFamily: font.monospace },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: space.sm },
+  amount: { ...text.priceLg },
+  link: { ...text.bodySemi, marginTop: space.sm },
   detail: { ...text.caption, marginTop: space.xs },
-  actions: { gap: space.sm, marginTop: space.md },
 });

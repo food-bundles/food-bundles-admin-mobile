@@ -1,175 +1,44 @@
-export type VoucherType = 'DISCOUNT_10' | 'DISCOUNT_20' | 'DISCOUNT_50' | 'DISCOUNT_80' | 'DISCOUNT_100';
-export type VoucherStatus = 'ACTIVE' | 'EXHAUSTED' | 'EXPIRED' | 'DEACTIVATED';
-export type LoanApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'ACCEPTED' | 'DISBURSED';
+/** Single-use voucher status: AVAILABLE can still be redeemed, USED is spent, EXPIRED lapsed unused. */
+export type VoucherStatus = 'AVAILABLE' | 'USED' | 'EXPIRED';
 
+/**
+ * Voucher = single-use token, NOT a balance. A restaurant can hold multiple
+ * vouchers simultaneously up to its creditLimit. Matches the restaurant
+ * app's v6/v7 model (src/mocks/types.ts `Voucher`), not the older 16-digit
+ * PAN / 8-session-state model described in stale docs — see PROGRESS.md's
+ * "Decisions taken autonomously" for the reconciliation note.
+ */
 export interface Voucher {
   id: string;
+  code: string; // "FB-XXXX-XXXX"
   restaurantId: string;
   restaurantName: string;
-  voucherType: VoucherType;
-  creditLimit: number;
-  outstandingBalance: number;
-  repaymentDays: number;
+  amount: number; // RWF
   status: VoucherStatus;
-  createdAt: string;
-  expiryDate: string;
-  loanId: string | null;
+  issuedAt: string;
+  expiresAt: string; // 30 days from issue
+  orderId: string | null;
+  appliedAt: string | null;
 }
 
-export interface LoanApplication {
-  id: string;
-  restaurantId: string;
-  restaurantName: string;
-  requestedAmount: number;
-  purpose: string;
-  status: LoanApplicationStatus;
-  requestedAt: string;
-  approvedAmount: number | null;
-  repaymentDays: number | null;
-  voucherType: VoucherType | null;
-  rejectionReason: string | null;
-}
-
-export interface Penalty {
-  id: string;
-  loanId: string;
-  amount: number;
-  ratePerMonth: number;
-  daysOverdue: number;
-  waived: boolean;
-  waivedReason: string | null;
-}
-
-/** 10 vouchers, real discount-tier + credit-line model per voucherService.ts. */
+/**
+ * 12 vouchers: 4 AVAILABLE, 5 USED, 3 EXPIRED, across restaurants
+ * rest-001..rest-006 (reusing real ids from restaurants.ts). USED vouchers
+ * link to a real order id from orders.ts/ordersRecent.ts.
+ */
 export const MOCK_VOUCHERS: Voucher[] = [
-  {
-    id: 'vch-001',
-    restaurantId: 'rest-001',
-    restaurantName: 'Kigali Bistro',
-    voucherType: 'DISCOUNT_20',
-    creditLimit: 500000,
-    outstandingBalance: 120000,
-    repaymentDays: 30,
-    status: 'ACTIVE',
-    createdAt: '2026-06-01T08:00:00Z',
-    expiryDate: '2026-12-01T08:00:00Z',
-    loanId: 'loan-001',
-  },
-  {
-    id: 'vch-002',
-    restaurantId: 'rest-003',
-    restaurantName: 'Laza',
-    voucherType: 'DISCOUNT_50',
-    creditLimit: 800000,
-    outstandingBalance: 800000,
-    repaymentDays: 45,
-    status: 'ACTIVE',
-    createdAt: '2026-05-15T09:00:00Z',
-    expiryDate: '2026-11-15T09:00:00Z',
-    loanId: 'loan-002',
-  },
-  {
-    id: 'vch-003',
-    restaurantId: 'rest-004',
-    restaurantName: 'Heaven Restaurant',
-    voucherType: 'DISCOUNT_10',
-    creditLimit: 300000,
-    outstandingBalance: 0,
-    repaymentDays: 30,
-    status: 'EXHAUSTED',
-    createdAt: '2026-04-10T07:30:00Z',
-    expiryDate: '2026-10-10T07:30:00Z',
-    loanId: 'loan-003',
-  },
-  {
-    id: 'vch-004',
-    restaurantId: 'rest-007',
-    restaurantName: 'Sole e Luna',
-    voucherType: 'DISCOUNT_10',
-    creditLimit: 200000,
-    outstandingBalance: 45000,
-    repaymentDays: 30,
-    status: 'ACTIVE',
-    createdAt: '2026-07-01T10:00:00Z',
-    expiryDate: '2027-01-01T10:00:00Z',
-    loanId: 'loan-004',
-  },
-  {
-    id: 'vch-005',
-    restaurantId: 'rest-008',
-    restaurantName: 'Poivre Noir',
-    voucherType: 'DISCOUNT_80',
-    creditLimit: 1000000,
-    outstandingBalance: 610000,
-    repaymentDays: 60,
-    status: 'ACTIVE',
-    createdAt: '2026-03-20T11:00:00Z',
-    expiryDate: '2026-09-20T11:00:00Z',
-    loanId: 'loan-005',
-  },
-  {
-    id: 'vch-006',
-    restaurantId: 'rest-010',
-    restaurantName: 'The Manor',
-    voucherType: 'DISCOUNT_100',
-    creditLimit: 1500000,
-    outstandingBalance: 0,
-    repaymentDays: 60,
-    status: 'DEACTIVATED',
-    createdAt: '2026-02-05T08:00:00Z',
-    expiryDate: '2026-08-05T08:00:00Z',
-    loanId: 'loan-006',
-  },
-  {
-    id: 'vch-007',
-    restaurantId: 'rest-011',
-    restaurantName: 'Bourbon Coffee',
-    voucherType: 'DISCOUNT_20',
-    creditLimit: 250000,
-    outstandingBalance: 250000,
-    repaymentDays: 30,
-    status: 'EXPIRED',
-    createdAt: '2026-01-10T09:00:00Z',
-    expiryDate: '2026-07-10T09:00:00Z',
-    loanId: 'loan-007',
-  },
-  {
-    id: 'vch-008',
-    restaurantId: 'rest-012',
-    restaurantName: 'Kigali Marriott Kitchen',
-    voucherType: 'DISCOUNT_50',
-    creditLimit: 2000000,
-    outstandingBalance: 850000,
-    repaymentDays: 60,
-    status: 'ACTIVE',
-    createdAt: '2026-06-15T10:00:00Z',
-    expiryDate: '2026-12-15T10:00:00Z',
-    loanId: 'loan-008',
-  },
-  {
-    id: 'vch-009',
-    restaurantId: 'rest-014',
-    restaurantName: 'Green Hills Grill',
-    voucherType: 'DISCOUNT_10',
-    creditLimit: 150000,
-    outstandingBalance: 30000,
-    repaymentDays: 30,
-    status: 'ACTIVE',
-    createdAt: '2026-07-20T08:30:00Z',
-    expiryDate: '2027-01-20T08:30:00Z',
-    loanId: 'loan-009',
-  },
-  {
-    id: 'vch-010',
-    restaurantId: 'rest-002',
-    restaurantName: 'Imboni',
-    voucherType: 'DISCOUNT_20',
-    creditLimit: 200000,
-    outstandingBalance: 200000,
-    repaymentDays: 30,
-    status: 'ACTIVE',
-    createdAt: '2026-08-01T09:00:00Z',
-    expiryDate: '2027-02-01T09:00:00Z',
-    loanId: 'loan-010',
-  },
+  { id: 'vch-001', code: 'FB-7A2K-9X3P', restaurantId: 'rest-001', restaurantName: 'Kigali Bistro', amount: 45000, status: 'AVAILABLE', issuedAt: '2026-08-10T08:00:00Z', expiresAt: '2026-09-09T08:00:00Z', orderId: null, appliedAt: null },
+  { id: 'vch-002', code: 'FB-3M8L-QW1Z', restaurantId: 'rest-002', restaurantName: 'Imboni', amount: 20000, status: 'AVAILABLE', issuedAt: '2026-08-15T09:00:00Z', expiresAt: '2026-09-14T09:00:00Z', orderId: null, appliedAt: null },
+  { id: 'vch-003', code: 'FB-5T6Y-N2VB', restaurantId: 'rest-003', restaurantName: 'Laza', amount: 80000, status: 'AVAILABLE', issuedAt: '2026-08-20T10:00:00Z', expiresAt: '2026-09-19T10:00:00Z', orderId: null, appliedAt: null },
+  { id: 'vch-004', code: 'FB-9K4J-8HGD', restaurantId: 'rest-004', restaurantName: 'Heaven Restaurant', amount: 10000, status: 'AVAILABLE', issuedAt: '2026-08-25T11:00:00Z', expiresAt: '2026-09-24T11:00:00Z', orderId: null, appliedAt: null },
+
+  { id: 'vch-005', code: 'FB-1PQR-5TUV', restaurantId: 'rest-001', restaurantName: 'Kigali Bistro', amount: 60000, status: 'USED', issuedAt: '2026-07-01T08:00:00Z', expiresAt: '2026-07-31T08:00:00Z', orderId: 'FB-24810', appliedAt: '2026-07-05T12:30:00Z' },
+  { id: 'vch-006', code: 'FB-2ABC-6DEF', restaurantId: 'rest-002', restaurantName: 'Imboni', amount: 35000, status: 'USED', issuedAt: '2026-07-10T08:00:00Z', expiresAt: '2026-08-09T08:00:00Z', orderId: 'FB-24812', appliedAt: '2026-07-14T09:15:00Z' },
+  { id: 'vch-007', code: 'FB-4GHI-7JKL', restaurantId: 'rest-005', restaurantName: 'Repub Lounge', amount: 25000, status: 'USED', issuedAt: '2026-07-15T08:00:00Z', expiresAt: '2026-08-14T08:00:00Z', orderId: 'FB-24815', appliedAt: '2026-07-18T14:00:00Z' },
+  { id: 'vch-008', code: 'FB-8MNO-3PQR', restaurantId: 'rest-006', restaurantName: 'Meze Fresh', amount: 15000, status: 'USED', issuedAt: '2026-06-20T08:00:00Z', expiresAt: '2026-07-20T08:00:00Z', orderId: 'FB-24811', appliedAt: '2026-06-25T10:45:00Z' },
+  { id: 'vch-009', code: 'FB-6STU-9VWX', restaurantId: 'rest-003', restaurantName: 'Laza', amount: 70000, status: 'USED', issuedAt: '2026-06-25T08:00:00Z', expiresAt: '2026-07-25T08:00:00Z', orderId: 'FB-24813', appliedAt: '2026-06-29T16:20:00Z' },
+
+  { id: 'vch-010', code: 'FB-0YZA-4BCD', restaurantId: 'rest-004', restaurantName: 'Heaven Restaurant', amount: 30000, status: 'EXPIRED', issuedAt: '2026-05-01T08:00:00Z', expiresAt: '2026-05-31T08:00:00Z', orderId: null, appliedAt: null },
+  { id: 'vch-011', code: 'FB-7EFG-2HIJ', restaurantId: 'rest-005', restaurantName: 'Repub Lounge', amount: 18000, status: 'EXPIRED', issuedAt: '2026-05-10T08:00:00Z', expiresAt: '2026-06-09T08:00:00Z', orderId: null, appliedAt: null },
+  { id: 'vch-012', code: 'FB-3KLM-8NOP', restaurantId: 'rest-006', restaurantName: 'Meze Fresh', amount: 50000, status: 'EXPIRED', issuedAt: '2026-05-15T08:00:00Z', expiresAt: '2026-06-14T08:00:00Z', orderId: null, appliedAt: null },
 ];

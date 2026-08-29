@@ -3,7 +3,7 @@ import { space } from '@/theme';
 import { useT } from '@/i18n';
 import { formatRwfNumber } from '@/lib/formatRwf';
 import { StatCard } from '@/components/ui/StatCard';
-import { MOCK_LOAN_APPLICATIONS } from '@/mocks/loans';
+import { MOCK_LOAN_APPLICATIONS } from '@/mocks/loanApplications';
 
 /** 4 StatCards: Total, Pending, Approved, Rejected. */
 export function LoanStats() {
@@ -22,10 +22,10 @@ export function LoanStats() {
         <StatCard label={t('vouchers.statPending')} value={formatRwfNumber(pending)} deltaTone="marigold" delta={pending > 0 ? String(pending) : undefined} />
       </View>
       <View style={styles.tile}>
-        <StatCard label={t('vouchers.statApproved')} value={formatRwfNumber(approved)} />
+        <StatCard label={t('vouchers.statApproved')} value={formatRwfNumber(approved)} deltaTone="ripe" delta={approved > 0 ? String(approved) : undefined} />
       </View>
       <View style={styles.tile}>
-        <StatCard label={t('vouchers.statRejected')} value={formatRwfNumber(rejected)} />
+        <StatCard label={t('vouchers.statRejected')} value={formatRwfNumber(rejected)} deltaTone="chili" delta={rejected > 0 ? String(rejected) : undefined} />
       </View>
     </View>
   );
