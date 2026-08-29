@@ -1,13 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { space, text, useTheme } from '@/theme';
-import { useT, useLanguageStore } from '@/i18n';
+import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { MOCK_WALLETS, MOCK_TRANSACTIONS } from '@/mocks/deposits';
+import { MOCK_WALLETS, MOCK_TRANSACTIONS, type TransactionType } from '@/mocks/deposits';
+
+const TYPE_KEY: Record<TransactionType, TranslationKey> = {
+  TOP_UP: 'deposits.typeTopUp',
+  WITHDRAWAL: 'deposits.typeWithdrawal',
+  ORDER_PAYMENT: 'deposits.typeOrderPayment',
+  REFUND: 'deposits.typeRefund',
+};
 
 export interface RestaurantWalletTabProps {
   restaurantId: string;
@@ -37,7 +44,7 @@ export function RestaurantWalletTab({ restaurantId }: RestaurantWalletTabProps) 
         <Card>
           {transactions.map((tx, index) => (
             <View key={tx.id} style={[styles.row, index < transactions.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.hairline }]}>
-              <Text style={[styles.type, { color: colors.ink }]}>{tx.type.replace('_', ' ')}</Text>
+              <Text style={[styles.type, { color: colors.ink }]}>{t(TYPE_KEY[tx.type])}</Text>
               <View style={styles.amountCol}>
                 <Text style={[styles.amount, { color: tx.amount < 0 ? colors.chili : colors.ripe }]}>{formatRwf(tx.amount)}</Text>
                 <Text style={[styles.date, { color: colors.muted }]}>{formatDate(tx.createdAt, language)}</Text>

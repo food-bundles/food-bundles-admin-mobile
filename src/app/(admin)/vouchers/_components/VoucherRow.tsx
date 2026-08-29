@@ -1,24 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { font, space, text, useTheme } from '@/theme';
-import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
+import { useT, useLanguageStore } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import type { Voucher, VoucherStatus } from '@/mocks/vouchers';
-
-const STATUS_TONE: Record<VoucherStatus, 'ripe' | 'neutral' | 'chili'> = {
-  AVAILABLE: 'ripe',
-  USED: 'neutral',
-  EXPIRED: 'chili',
-};
-
-const STATUS_KEY: Record<VoucherStatus, TranslationKey> = {
-  AVAILABLE: 'vouchers.statusAvailable',
-  USED: 'vouchers.statusUsed',
-  EXPIRED: 'vouchers.statusExpired',
-};
+import { VoucherStatusChip } from '@/components/ui/VoucherStatusChip';
+import type { Voucher } from '@/mocks/vouchers';
 
 export interface VoucherRowProps {
   voucher: Voucher;
@@ -37,7 +25,7 @@ export function VoucherRow({ voucher }: VoucherRowProps) {
           <Text style={[styles.code, { color: colors.leaf }]}>{voucher.code}</Text>
           <Text style={[styles.name, { color: colors.ink }]}>{voucher.restaurantName}</Text>
         </View>
-        <Badge tone={STATUS_TONE[voucher.status]} label={t(STATUS_KEY[voucher.status])} />
+        <VoucherStatusChip status={voucher.status} />
       </View>
       <View style={styles.footer}>
         <Text style={[styles.amount, { color: colors.ink }]}>{formatRwf(voucher.amount)}</Text>

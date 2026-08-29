@@ -72,6 +72,10 @@ export const rwFinancial: Record<keyof typeof enFinancial, string> = {
   'deposits.dailyLimit': 'Urwego rwa buri munsi',
   'deposits.cap': 'Urwego rwo hejuru',
   'deposits.timeWindow': 'Igihe cyemewe',
+  'deposits.typeTopUp': 'Kongera amafaranga',
+  'deposits.typeWithdrawal': 'Gukura amafaranga',
+  'deposits.typeOrderPayment': 'Kwishyura itumizwa',
+  'deposits.typeRefund': 'Kwishyuza',
 
   'subscriptions.title': 'Ubwiyandikishe',
   'subscriptions.tabPlans': 'Gahunda',

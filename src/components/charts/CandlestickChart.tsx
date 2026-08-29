@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { CartesianChart, Candlestick } from 'victory-native';
-import { useTheme } from '@/theme';
+import { signatureDuration, useTheme } from '@/theme';
 
 export interface OhlcDatum {
   x: number;
@@ -16,7 +16,7 @@ export interface CandlestickChartProps {
   height?: number;
 }
 
-/** OHLC candlestick chart for per-period market price history. */
+/** OHLC candlestick chart for per-period market price history. Draws in over 800ms on mount and on data change. */
 export function CandlestickChart({ data, height = 200 }: CandlestickChartProps) {
   const { colors } = useTheme();
 
@@ -31,6 +31,7 @@ export function CandlestickChart({ data, height = 200 }: CandlestickChartProps) 
             closePoints={points.close}
             chartBounds={chartBounds}
             candleColors={{ positive: colors.ripe, negative: colors.chili }}
+            animate={{ type: 'timing', duration: signatureDuration.chartDrawIn }}
           />
         )}
       </CartesianChart>

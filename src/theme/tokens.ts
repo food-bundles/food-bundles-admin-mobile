@@ -52,3 +52,15 @@ export const ROLE_BADGE_TOKEN = {
   LOGISTICS: { bg: 'tintMarigold', text: 'tintedAmberText' },
   TRADER: { bg: 'neutral', text: 'secondary' },
 } as const;
+
+/**
+ * Single-use voucher token status treatment (Section 7 polish pass) —
+ * exact per the brief: AVAILABLE ripe green, USED pine/disabled (already
+ * redeemed, no longer actionable), EXPIRED chili outline (same outline
+ * shape as ORDER_STATUS_TOKEN.REFUNDED).
+ */
+export const VOUCHER_STATUS_TOKEN = {
+  AVAILABLE: { bg: 'tintRipe', text: 'ripe' },
+  USED: { bg: 'disabledLine', text: 'pine' },
+  EXPIRED: { bg: 'paper', text: 'chili', borderColor: 'chili' },
+} as const;

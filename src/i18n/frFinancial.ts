@@ -72,6 +72,10 @@ export const frFinancial: Record<keyof typeof enFinancial, string> = {
   'deposits.dailyLimit': 'Limite journalière',
   'deposits.cap': 'Plafond',
   'deposits.timeWindow': 'Plage horaire',
+  'deposits.typeTopUp': 'Rechargement',
+  'deposits.typeWithdrawal': 'Retrait',
+  'deposits.typeOrderPayment': 'Paiement de commande',
+  'deposits.typeRefund': 'Remboursement',
 
   'subscriptions.title': 'Abonnements',
   'subscriptions.tabPlans': 'Formules',

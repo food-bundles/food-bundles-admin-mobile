@@ -70,6 +70,10 @@ export const enFinancial = {
   'deposits.dailyLimit': 'Daily limit',
   'deposits.cap': 'Cap',
   'deposits.timeWindow': 'Time window',
+  'deposits.typeTopUp': 'Top up',
+  'deposits.typeWithdrawal': 'Withdrawal',
+  'deposits.typeOrderPayment': 'Order payment',
+  'deposits.typeRefund': 'Refund',
 
   'subscriptions.title': 'Subscriptions',
   'subscriptions.tabPlans': 'Plans',

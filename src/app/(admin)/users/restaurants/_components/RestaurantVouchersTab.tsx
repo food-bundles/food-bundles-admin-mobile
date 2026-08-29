@@ -5,20 +5,11 @@ import { useT, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { VoucherStatusChip } from '@/components/ui/VoucherStatusChip';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { MOCK_VOUCHERS, type VoucherStatus } from '@/mocks/vouchers';
+import { MOCK_VOUCHERS } from '@/mocks/vouchers';
 import { MOCK_LOAN_APPLICATIONS, type LoanApplicationStatus } from '@/mocks/loanApplications';
 
-const VOUCHER_STATUS_TONE: Record<VoucherStatus, 'ripe' | 'neutral' | 'chili'> = {
-  AVAILABLE: 'ripe',
-  USED: 'neutral',
-  EXPIRED: 'chili',
-};
-const VOUCHER_STATUS_KEY: Record<VoucherStatus, TranslationKey> = {
-  AVAILABLE: 'vouchers.statusAvailable',
-  USED: 'vouchers.statusUsed',
-  EXPIRED: 'vouchers.statusExpired',
-};
 const LOAN_STATUS_TONE: Record<LoanApplicationStatus, 'marigold' | 'neutral' | 'leaf' | 'chili'> = {
   PENDING: 'marigold',
   UNDER_REVIEW: 'neutral',
@@ -53,7 +44,7 @@ export function RestaurantVouchersTab({ restaurantId }: RestaurantVouchersTabPro
         <Card key={voucher.id} onPress={() => router.push(`/(admin)/vouchers/${voucher.id}`)} accessibilityLabel={voucher.code}>
           <View style={styles.row}>
             <Text style={[styles.code, { color: colors.ink }]}>{voucher.code}</Text>
-            <Badge tone={VOUCHER_STATUS_TONE[voucher.status]} label={t(VOUCHER_STATUS_KEY[voucher.status])} />
+            <VoucherStatusChip status={voucher.status} />
           </View>
           <Text style={[styles.detail, { color: colors.muted }]}>{formatRwf(voucher.amount)}</Text>
         </Card>

@@ -5,7 +5,7 @@ import { useT } from '@/i18n';
 import { AreaChart } from '@/components/charts/AreaChart';
 import { CandlestickChart, type OhlcDatum } from '@/components/charts/CandlestickChart';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { PriceChangeBadge } from '@/components/ui/PriceChangeBadge';
 import { Button } from '@/components/ui/Button';
 import { SegmentedTabs } from '@/components/ui/SegmentedTabs';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
@@ -32,8 +32,7 @@ export function AnalysisTab() {
 
   const firstClose = areaData[0]?.y ?? 0;
   const lastClose = areaData[areaData.length - 1]?.y ?? 0;
-  const pctChange = firstClose > 0 ? (((lastClose - firstClose) / firstClose) * 100).toFixed(1) : '0.0';
-  const isUp = Number(pctChange) >= 0;
+  const pctChange = firstClose > 0 ? ((lastClose - firstClose) / firstClose) * 100 : 0;
 
   const rsi = rsiForCommodity(commodityId);
   const momentum = momentumForCommodity(commodityId);
@@ -46,7 +45,7 @@ export function AnalysisTab() {
 
       <Card>
         <View style={styles.headerRow}>
-          <Badge tone={isUp ? 'ripe' : 'chili'} label={t(isUp ? 'markets.priceChangeUp' : 'markets.priceChangeDown', { pct: pctChange })} />
+          <PriceChangeBadge pct={pctChange} />
           <SegmentedTabs
             items={[
               { key: 'line', label: t('markets.chartLine') },

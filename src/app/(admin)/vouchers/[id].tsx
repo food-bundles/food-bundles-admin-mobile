@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { font, space, text, useTheme } from '@/theme';
-import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
+import { useT, useLanguageStore } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { useRoleGuard } from '@/lib/roleGuard';
@@ -10,25 +10,13 @@ import { useAuthStore } from '@/stores/authStore';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { VoucherStatusChip } from '@/components/ui/VoucherStatusChip';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { MOCK_VOUCHERS, type VoucherStatus } from '@/mocks/vouchers';
 import { MOCK_RESTAURANTS } from '@/mocks/restaurants';
 
 const CAN_MANAGE_ROLES = ['SUPERUSER', 'ADMIN'];
-
-const STATUS_TONE: Record<VoucherStatus, 'ripe' | 'neutral' | 'chili'> = {
-  AVAILABLE: 'ripe',
-  USED: 'neutral',
-  EXPIRED: 'chili',
-};
-
-const STATUS_KEY: Record<VoucherStatus, TranslationKey> = {
-  AVAILABLE: 'vouchers.statusAvailable',
-  USED: 'vouchers.statusUsed',
-  EXPIRED: 'vouchers.statusExpired',
-};
 
 /** Voucher detail: single-use token model. Restaurant/order links, revoke (AVAILABLE only, ADMIN+). */
 export default function VoucherDetailScreen() {
@@ -62,7 +50,7 @@ export default function VoucherDetailScreen() {
           <Text style={[styles.code, { color: colors.leaf }]}>{voucher.code}</Text>
           <View style={styles.headerRow}>
             <Text style={[styles.amount, { color: colors.ink }]}>{formatRwf(voucher.amount)}</Text>
-            <Badge tone={STATUS_TONE[voucher.status]} label={t(STATUS_KEY[voucher.status])} />
+            <VoucherStatusChip status={voucher.status} />
           </View>
           <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.issuedOn')}: {formatDate(voucher.issuedAt, language)}</Text>
           <Text style={[styles.detail, { color: colors.muted }]}>{t('vouchers.expiresOn')}: {formatDate(voucher.expiresAt, language)}</Text>
