@@ -1,87 +1,90 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
-import { formatRwf } from '@/lib/formatRwf';
 import { AreaChart } from '@/components/charts/AreaChart';
+import { CandlestickChart, type OhlcDatum } from '@/components/charts/CandlestickChart';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { SegmentedTabs } from '@/components/ui/SegmentedTabs';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
-import { MOCK_MARKETS } from '@/mocks/markets';
-import { MOCK_PRODUCTS } from '@/mocks/products';
-import { MOCK_MARKET_PRICES } from '@/mocks/market-prices';
+import { COMMODITIES, getSeries, rsiForCommodity, momentumForCommodity, type CommodityId } from '@/mocks/market-prices';
+import { RsiGauge } from './RsiGauge';
+import { MomentumRow } from './MomentumRow';
+import { ComparePeriodsSheet } from './ComparePeriodsSheet';
 
-type RangeKey = 'day' | 'week' | 'month' | 'quarter';
+type ChartMode = 'line' | 'candle';
 
-/** AreaChart for the selected commodity (FoodBundles series), 4 time-range presets, best-price highlight. */
+/** Candlestick/line toggle, RSI gauge, momentum, "compare periods" sheet, best-time-to-order insight. */
 export function AnalysisTab() {
   const { colors } = useTheme();
   const t = useT();
-  const trackedProductIds = [...new Set(MOCK_MARKET_PRICES.map((s) => s.productId))];
-  const products = MOCK_PRODUCTS.filter((p) => trackedProductIds.includes(p.id));
-  const [productId, setProductId] = useState(products[0]?.id ?? '');
-  const [range, setRange] = useState<RangeKey>('week');
+  const [commodityId, setCommodityId] = useState<CommodityId>(COMMODITIES[0].id);
+  const [chartMode, setChartMode] = useState<ChartMode>('line');
+  const [compareOpen, setCompareOpen] = useState(false);
 
-  const seriesForProduct = MOCK_MARKET_PRICES.filter((s) => s.productId === productId);
-  const bestSeries = useMemo(() => {
-    return seriesForProduct.reduce<typeof seriesForProduct[number] | null>((best, s) => {
-      const lastClose = s.days[s.days.length - 1]?.close ?? Infinity;
-      const bestClose = best?.days[best.days.length - 1]?.close ?? Infinity;
-      return lastClose < bestClose ? s : best;
-    }, null);
-  }, [seriesForProduct]);
+  const commodity = COMMODITIES.find((c) => c.id === commodityId) ?? COMMODITIES[0];
+  const series = getSeries(commodityId, 'mkt-001');
+  const days = series?.days ?? [];
+  const areaData = days.map((d, i) => ({ x: i, y: d.close }));
+  const ohlcData: OhlcDatum[] = days.map((d, i) => ({ x: i, open: d.open, high: d.high, low: d.low, close: d.close }));
 
-  const foodBundlesSeries = seriesForProduct.find((s) => s.marketId === 'mkt-001');
-  const chartData = (foodBundlesSeries ?? seriesForProduct[0])?.days.map((d, i) => ({ x: i, y: d.close })) ?? [];
-
-  const firstClose = chartData[0]?.y ?? 0;
-  const lastClose = chartData[chartData.length - 1]?.y ?? 0;
+  const firstClose = areaData[0]?.y ?? 0;
+  const lastClose = areaData[areaData.length - 1]?.y ?? 0;
   const pctChange = firstClose > 0 ? (((lastClose - firstClose) / firstClose) * 100).toFixed(1) : '0.0';
   const isUp = Number(pctChange) >= 0;
 
-  const productChips: FilterChip[] = products.map((p) => ({ key: p.id, label: p.name }));
-  const rangeChips: FilterChip[] = [
-    { key: 'day', label: t('markets.rangeDay') },
-    { key: 'week', label: t('markets.rangeWeek') },
-    { key: 'month', label: t('markets.rangeMonth') },
-    { key: 'quarter', label: t('markets.rangeQuarter') },
-  ];
+  const rsi = rsiForCommodity(commodityId);
+  const momentum = momentumForCommodity(commodityId);
+
+  const commodityChips: FilterChip[] = COMMODITIES.map((c) => ({ key: c.id, label: c.name }));
 
   return (
     <View style={styles.container}>
-      <FilterBar chips={productChips} activeKey={productId} onSelect={setProductId} />
-      <FilterBar chips={rangeChips} activeKey={range} onSelect={(key) => setRange(key as RangeKey)} />
+      <FilterBar chips={commodityChips} activeKey={commodityId} onSelect={(key) => setCommodityId(key as CommodityId)} />
+
       <Card>
-        <View style={styles.badgeRow}>
+        <View style={styles.headerRow}>
           <Badge tone={isUp ? 'ripe' : 'chili'} label={t(isUp ? 'markets.priceChangeUp' : 'markets.priceChangeDown', { pct: pctChange })} />
-          {bestSeries ? <Badge tone="leaf" label={t('markets.bestPrice')} /> : null}
+          <SegmentedTabs
+            items={[
+              { key: 'line', label: t('markets.chartLine') },
+              { key: 'candle', label: t('markets.chartCandle') },
+            ]}
+            active={chartMode}
+            onChange={setChartMode}
+          />
         </View>
-        <AreaChart data={chartData} colorKey="leaf" height={200} />
+        {chartMode === 'line' ? <AreaChart data={areaData} colorKey="leaf" height={200} /> : <CandlestickChart data={ohlcData} height={200} />}
       </Card>
+
       <Card>
-        {seriesForProduct.map((series, index) => {
-          const market = MOCK_MARKETS.find((m) => m.id === series.marketId);
-          const latest = series.days[series.days.length - 1]?.close ?? 0;
-          const isBest = series === bestSeries;
-          return (
-            <View
-              key={series.marketId}
-              style={[styles.legendRow, index < seriesForProduct.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.hairline }]}
-            >
-              <Text style={[styles.legendName, { color: isBest ? colors.leaf : colors.ink }]}>{market?.name}</Text>
-              <Text style={[styles.legendValue, { color: isBest ? colors.leaf : colors.muted }]}>{formatRwf(latest)}</Text>
-            </View>
-          );
-        })}
+        <RsiGauge rsi={rsi} />
       </Card>
+
+      <Card>
+        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('markets.tabAnalysis')}</Text>
+        <MomentumRow momentum={momentum} />
+      </Card>
+
+      <Button variant="secondary" fullWidth onPress={() => setCompareOpen(true)}>
+        {t('markets.comparePeriods')}
+      </Button>
+
+      <Card>
+        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('markets.bestTimeToOrder')}</Text>
+        <Text style={[styles.insight, { color: colors.body }]}>{t('markets.bestTimeToOrderHint', { commodity: commodity.name })}</Text>
+      </Card>
+
+      <ComparePeriodsSheet visible={compareOpen} commodityId={commodityId} onClose={() => setCompareOpen(false)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: space.md },
-  badgeRow: { flexDirection: 'row', gap: space.sm, marginBottom: space.sm },
-  legendRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: space.sm },
-  legendName: { ...text.bodySemi },
-  legendValue: { ...text.bodySemi },
+  container: { gap: space.md, paddingBottom: space.xxxl },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: space.sm },
+  sectionTitle: { ...text.h3, marginBottom: space.sm },
+  insight: { ...text.body },
 });
