@@ -42,6 +42,12 @@ export const frOperations: Record<keyof typeof enOperations, string> = {
   'newsletter.clickRate': 'Taux de clic',
   'newsletter.recipients': '{{count}} destinataires',
   'newsletter.campaignDetailTitle': '{{subject}}',
+  'newsletter.sentAt': 'Envoyé le {{date}}',
+  'newsletter.notSentYet': 'Pas encore envoyé',
+  'newsletter.resend': 'Renvoyer la campagne',
+  'newsletter.resendConfirmTitle': 'Renvoyer la campagne',
+  'newsletter.resendConfirmMessage': 'Renvoyer « {{subject}} » aux {{count}} destinataires ?',
+  'newsletter.resendSuccess': 'Campagne renvoyée à {{count}} destinataires.',
 
   'farmerSubmissions.title': 'Soumissions des agriculteurs',
   'farmerSubmissions.filterVerified': 'Vérifiées',

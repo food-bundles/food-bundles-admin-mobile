@@ -42,6 +42,12 @@ export const rwOperations: Record<keyof typeof enOperations, string> = {
   'newsletter.clickRate': 'Igipimo cyo gukanda',
   'newsletter.recipients': 'Ababibona {{count}}',
   'newsletter.campaignDetailTitle': '{{subject}}',
+  'newsletter.sentAt': 'Yoherejwe {{date}}',
+  'newsletter.notSentYet': 'Ntiryoherejwe',
+  'newsletter.resend': 'Ongera wohereze',
+  'newsletter.resendConfirmTitle': 'Ongera wohereze itangazo',
+  'newsletter.resendConfirmMessage': 'Ongera wohereze "{{subject}}" ku babona {{count}}?',
+  'newsletter.resendSuccess': 'Itangazo ryongeye koherezwa ku babona {{count}}.',
 
   'farmerSubmissions.title': 'Ibyatanzwe n’Abahinzi',
   'farmerSubmissions.filterVerified': 'Byemejwe',

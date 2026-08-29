@@ -53,6 +53,12 @@ export const frUsers: Record<keyof typeof enUsers, string> = {
   'affiliators.roleOwner': 'Propriétaire',
   'affiliators.roleManager': 'Gérant',
   'affiliators.roleStaff': 'Personnel',
+  'affiliators.create': 'Ajouter un affilié',
+  'affiliators.createTitle': 'Ajouter un affilié',
+  'affiliators.fieldRestaurant': 'Restaurant',
+  'affiliators.fieldRestaurantSearch': 'Rechercher un restaurant',
+  'affiliators.fieldRole': 'Rôle',
+  'affiliators.selectRestaurantFirst': 'Sélectionnez un restaurant pour continuer.',
 
   'admins.title': 'Administrateurs',
   'admins.searchPlaceholder': 'Rechercher nom ou e-mail',

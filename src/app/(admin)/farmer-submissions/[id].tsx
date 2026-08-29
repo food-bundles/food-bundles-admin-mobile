@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { space, text, useTheme } from '@/theme';
+import { radius, space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { useRoleGuard } from '@/lib/roleGuard';
+import { qualityPhotosFor } from '@/lib/qualityPhotos';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -68,8 +69,13 @@ export default function FarmerSubmissionDetailScreen() {
 
         <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('farmerSubmissions.qualityPhotos')}</Text>
         <View style={styles.photoRow}>
-          {[0, 1, 2].map((index) => (
-            <View key={index} style={[styles.photoPlaceholder, { backgroundColor: colors.neutral }]} />
+          {qualityPhotosFor(submission.productName).map((uri, index) => (
+            <Image
+              key={uri + index}
+              source={{ uri }}
+              style={[styles.photo, { backgroundColor: colors.neutral }]}
+              accessibilityLabel={`${submission.productName} quality photo ${index + 1}`}
+            />
           ))}
         </View>
 
@@ -117,6 +123,6 @@ const styles = StyleSheet.create({
   detail: { ...text.caption, marginTop: space.xs },
   sectionTitle: { ...text.h3 },
   photoRow: { flexDirection: 'row', gap: space.sm },
-  photoPlaceholder: { width: 80, height: 80, borderRadius: 8 },
+  photo: { width: 80, height: 80, borderRadius: radius.sm },
   actions: { gap: space.sm, marginTop: space.md },
 });

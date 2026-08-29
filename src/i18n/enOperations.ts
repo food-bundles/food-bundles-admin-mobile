@@ -40,6 +40,12 @@ export const enOperations = {
   'newsletter.clickRate': 'Click rate',
   'newsletter.recipients': '{{count}} recipients',
   'newsletter.campaignDetailTitle': '{{subject}}',
+  'newsletter.sentAt': 'Sent {{date}}',
+  'newsletter.notSentYet': 'Not sent yet',
+  'newsletter.resend': 'Resend campaign',
+  'newsletter.resendConfirmTitle': 'Resend campaign',
+  'newsletter.resendConfirmMessage': 'Resend "{{subject}}" to all {{count}} recipients?',
+  'newsletter.resendSuccess': 'Campaign resent to {{count}} recipients.',
 
   'farmerSubmissions.title': 'Farmer Submissions',
   'farmerSubmissions.filterVerified': 'Verified',

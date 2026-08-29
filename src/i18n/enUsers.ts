@@ -51,6 +51,12 @@ export const enUsers = {
   'affiliators.roleOwner': 'Owner',
   'affiliators.roleManager': 'Manager',
   'affiliators.roleStaff': 'Staff',
+  'affiliators.create': 'Add affiliator',
+  'affiliators.createTitle': 'Add affiliator',
+  'affiliators.fieldRestaurant': 'Restaurant',
+  'affiliators.fieldRestaurantSearch': 'Search restaurants',
+  'affiliators.fieldRole': 'Role',
+  'affiliators.selectRestaurantFirst': 'Select a restaurant to continue.',
 
   'admins.title': 'Administrators',
   'admins.searchPlaceholder': 'Search name or email',
