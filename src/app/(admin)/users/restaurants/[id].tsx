@@ -13,6 +13,7 @@ import { RestaurantOrdersTab } from './_components/RestaurantOrdersTab';
 import { RestaurantWalletTab } from './_components/RestaurantWalletTab';
 import { RestaurantAffiliatorsTab } from './_components/RestaurantAffiliatorsTab';
 import { RestaurantVouchersTab } from './_components/RestaurantVouchersTab';
+import { RestaurantConsentTab } from './_components/RestaurantConsentTab';
 
 /** Restaurant detail: Info | Orders | Wallet | Affiliators | Vouchers tabs. */
 export default function RestaurantDetailScreen() {
@@ -46,6 +47,7 @@ export default function RestaurantDetailScreen() {
         {tab === 'wallet' ? <RestaurantWalletTab restaurantId={restaurant.id} /> : null}
         {tab === 'affiliators' ? <RestaurantAffiliatorsTab restaurantId={restaurant.id} restaurantName={restaurant.name} /> : null}
         {tab === 'vouchers' ? <RestaurantVouchersTab restaurantId={restaurant.id} /> : null}
+        {tab === 'consent' ? <RestaurantConsentTab restaurantId={restaurant.id} /> : null}
       </ScrollView>
     </AdminScreen>
   );
