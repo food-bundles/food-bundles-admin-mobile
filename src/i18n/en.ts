@@ -10,6 +10,7 @@ import { enConsent } from './enConsent';
 import { enBranding } from './enBranding';
 import { enExpand } from './enExpand';
 import { enOrderBehalf } from './enOrderBehalf';
+import { enImages } from './enImages';
 
 const enChrome = {
   'nav.dashboard': 'Dashboard',
@@ -110,6 +111,7 @@ export const en = {
   ...enBranding,
   ...enExpand,
   ...enOrderBehalf,
+  ...enImages,
 };
 
 export type TranslationKey = keyof typeof en;

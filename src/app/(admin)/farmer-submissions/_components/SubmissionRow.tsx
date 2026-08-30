@@ -5,6 +5,7 @@ import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { qualityPhotosFor } from '@/lib/qualityPhotos';
+import { submissionRowPhoto } from '@/lib/submissionRowPhoto';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ExpandRow } from '@/components/data/ExpandRow';
@@ -53,6 +54,11 @@ export function SubmissionRow({ submission, expanded, onToggle }: SubmissionRowP
       accessibilityLabel={submission.farmerName}
       header={
         <View style={styles.row}>
+          <Image
+            source={{ uri: submissionRowPhoto(submission.productName) }}
+            style={[styles.rowPhoto, { backgroundColor: colors.neutral }]}
+            accessibilityLabel={submission.productName}
+          />
           <View style={styles.textCol}>
             <Text style={[styles.name, { color: colors.ink }]}>{submission.farmerName}</Text>
             <Text style={[styles.detail, { color: colors.muted }]}>
@@ -110,7 +116,8 @@ export function SubmissionRow({ submission, expanded, onToggle }: SubmissionRowP
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: space.lg },
+  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm, paddingHorizontal: space.lg },
+  rowPhoto: { width: 40, height: 40, borderRadius: radius.sm },
   textCol: { flex: 1 },
   name: { ...text.bodySemi },
   detail: { ...text.caption, marginTop: 2 },

@@ -10,6 +10,8 @@ export interface AdminRecord {
   commission: number;
   status: AdminStatus;
   createdAt: string;
+  /** Same pravatar.cc convention as MOCK_ADMIN in auth.ts, one distinct portrait id per admin. */
+  avatarUri: string;
 }
 
 /**
@@ -25,6 +27,7 @@ export const MOCK_ADMINS: AdminRecord[] = [
     commission: 0,
     status: 'ACTIVE',
     createdAt: '2025-01-15T08:00:00Z',
+    avatarUri: 'https://i.pravatar.cc/150?img=12',
   },
   {
     id: 'admin-002',
@@ -34,6 +37,7 @@ export const MOCK_ADMINS: AdminRecord[] = [
     commission: 0,
     status: 'ACTIVE',
     createdAt: '2025-01-20T09:00:00Z',
+    avatarUri: 'https://i.pravatar.cc/150?img=47',
   },
   {
     id: 'admin-003',
@@ -43,6 +47,7 @@ export const MOCK_ADMINS: AdminRecord[] = [
     commission: 2.5,
     status: 'ACTIVE',
     createdAt: '2025-02-05T10:30:00Z',
+    avatarUri: 'https://i.pravatar.cc/150?img=33',
   },
   {
     id: 'admin-004',
@@ -52,6 +57,7 @@ export const MOCK_ADMINS: AdminRecord[] = [
     commission: 0,
     status: 'ACTIVE',
     createdAt: '2025-02-18T11:15:00Z',
+    avatarUri: 'https://i.pravatar.cc/150?img=29',
   },
   {
     id: 'admin-005',
@@ -61,5 +67,6 @@ export const MOCK_ADMINS: AdminRecord[] = [
     commission: 1.5,
     status: 'ACTIVE',
     createdAt: '2025-03-01T07:45:00Z',
+    avatarUri: 'https://i.pravatar.cc/150?img=44',
   },
 ];

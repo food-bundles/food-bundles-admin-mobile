@@ -11,6 +11,7 @@ import { rwConsent } from './rwConsent';
 import { rwBranding } from './rwBranding';
 import { rwExpand } from './rwExpand';
 import { rwOrderBehalf } from './rwOrderBehalf';
+import { rwImages } from './rwImages';
 
 type ChromeKey = Exclude<
   keyof typeof enTable,
@@ -26,6 +27,7 @@ type ChromeKey = Exclude<
   | keyof typeof rwBranding
   | keyof typeof rwExpand
   | keyof typeof rwOrderBehalf
+  | keyof typeof rwImages
 >;
 
 const rwChrome: Record<ChromeKey, string> = {
@@ -127,4 +129,5 @@ export const rw: Record<keyof typeof enTable, string> = {
   ...rwBranding,
   ...rwExpand,
   ...rwOrderBehalf,
+  ...rwImages,
 };
