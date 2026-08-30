@@ -27,7 +27,7 @@ export default function CreateRestaurantScreen() {
   };
 
   return (
-    <AdminScreen title={t('restaurants.title')}>
+    <AdminScreen title={t('restaurants.title')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <ImageUpload uri={imageUri} onChange={setImageUri} shape="circle" accessibilityLabel={t('restaurants.fieldName')} />
         <View style={styles.fields}>

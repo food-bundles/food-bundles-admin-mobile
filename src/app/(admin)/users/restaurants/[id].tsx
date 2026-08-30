@@ -34,7 +34,7 @@ export default function RestaurantDetailScreen() {
   }
 
   return (
-    <AdminScreen title={restaurant.name}>
+    <AdminScreen title={restaurant.name} showBack>
       <RestaurantTabs active={tab} onChange={setTab} />
       <ScrollView contentContainerStyle={styles.content}>
         {tab === 'info' ? (

@@ -42,7 +42,7 @@ export default function OrderDetailScreen() {
   }
 
   return (
-    <AdminScreen title={t('orders.detailTitle', { id: order.id })}>
+    <AdminScreen title={t('orders.detailTitle', { id: order.id })} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.orderId, { color: colors.leaf }]}>{order.id}</Text>

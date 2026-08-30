@@ -25,7 +25,7 @@ export default function PromoCodeDetailScreen() {
   }
 
   return (
-    <AdminScreen title={t('promoCodes.editTitle')}>
+    <AdminScreen title={t('promoCodes.editTitle')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <PromoCodeForm initial={code} onSubmit={() => router.back()} submitLabel={t('common.save')} />
       </ScrollView>

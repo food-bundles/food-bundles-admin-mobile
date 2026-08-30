@@ -12,7 +12,7 @@ export default function CreateNotificationRecipientScreen() {
   const t = useT();
 
   return (
-    <AdminScreen title={t('settings.addRecipient')}>
+    <AdminScreen title={t('settings.addRecipient')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <RecipientForm onSubmit={() => router.back()} submitLabel={t('common.save')} />
       </ScrollView>

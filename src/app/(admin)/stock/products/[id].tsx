@@ -39,7 +39,7 @@ export default function ProductDetailScreen() {
   };
 
   return (
-    <AdminScreen title={product.name}>
+    <AdminScreen title={product.name} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <ProductForm initial={product} onSubmit={handleSubmit} submitLabel={t('products.adjustStock')} />
         <PricingCalculator costPrice={product.price} />

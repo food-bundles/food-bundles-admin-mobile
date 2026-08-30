@@ -60,7 +60,7 @@ export default function RecordPriceScreen() {
   };
 
   return (
-    <AdminScreen title={t('markets.recordPriceTitle')}>
+    <AdminScreen title={t('markets.recordPriceTitle')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={[styles.marketName, { color: colors.ink }]}>{market.name}</Text>
 

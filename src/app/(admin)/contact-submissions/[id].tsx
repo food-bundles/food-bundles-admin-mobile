@@ -43,7 +43,7 @@ export default function ContactSubmissionDetailScreen() {
   };
 
   return (
-    <AdminScreen title={submission.name}>
+    <AdminScreen title={submission.name} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <Card>
           <Text style={[styles.name, { color: colors.ink }]}>{submission.name}</Text>

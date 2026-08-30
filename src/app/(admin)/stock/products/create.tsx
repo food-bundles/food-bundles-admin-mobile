@@ -12,7 +12,7 @@ export default function CreateProductScreen() {
   const t = useT();
 
   return (
-    <AdminScreen title={t('products.createTitle')}>
+    <AdminScreen title={t('products.createTitle')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <ProductForm onSubmit={() => router.back()} submitLabel={t('common.save')} />
       </ScrollView>

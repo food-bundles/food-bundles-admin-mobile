@@ -12,7 +12,7 @@ export default function CreatePromoCodeScreen() {
   const t = useT();
 
   return (
-    <AdminScreen title={t('promoCodes.createTitle')}>
+    <AdminScreen title={t('promoCodes.createTitle')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <PromoCodeForm onSubmit={() => router.back()} submitLabel={t('common.save')} />
       </ScrollView>

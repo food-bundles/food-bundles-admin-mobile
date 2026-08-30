@@ -25,7 +25,7 @@ export default function CreateInvitationScreen() {
   };
 
   return (
-    <AdminScreen title={t('invitations.createTitle')}>
+    <AdminScreen title={t('invitations.createTitle')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <Input label={t('auth.email')} value={email} onChangeText={setEmail} keyboardType="email-address" />
         <RoleSelect value={role} onChange={setRole} assignerRole={assignerRole} />

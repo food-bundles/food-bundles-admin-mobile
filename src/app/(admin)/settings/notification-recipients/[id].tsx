@@ -25,7 +25,7 @@ export default function EditNotificationRecipientScreen() {
   }
 
   return (
-    <AdminScreen title={t('settings.editRecipient')}>
+    <AdminScreen title={t('settings.editRecipient')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <RecipientForm initial={recipient} onSubmit={() => router.back()} submitLabel={t('common.save')} />
       </ScrollView>

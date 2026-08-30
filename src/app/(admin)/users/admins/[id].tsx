@@ -34,7 +34,7 @@ export default function AdminDetailScreen() {
   const isActive = admin.status === 'ACTIVE';
 
   return (
-    <AdminScreen title={admin.name}>
+    <AdminScreen title={admin.name} showBack>
       <View style={styles.content}>
         <Card>
           <Text style={[styles.name, { color: colors.ink }]}>{admin.name}</Text>

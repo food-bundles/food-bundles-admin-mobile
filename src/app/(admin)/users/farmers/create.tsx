@@ -27,7 +27,7 @@ export default function CreateFarmerScreen() {
   };
 
   return (
-    <AdminScreen title={t('farmers.title')}>
+    <AdminScreen title={t('farmers.title')} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <ImageUpload uri={imageUri} onChange={setImageUri} shape="circle" accessibilityLabel={t('restaurants.fieldName')} />
         <View style={styles.fields}>

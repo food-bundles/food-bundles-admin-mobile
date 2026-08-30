@@ -35,7 +35,7 @@ export default function CampaignDetailScreen() {
   const canResend = campaign.status === 'SENT' || campaign.status === 'FAILED';
 
   return (
-    <AdminScreen title={t('newsletter.campaignDetailTitle', { subject: campaign.subject })}>
+    <AdminScreen title={t('newsletter.campaignDetailTitle', { subject: campaign.subject })} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.subject, { color: colors.ink }]}>{campaign.subject}</Text>

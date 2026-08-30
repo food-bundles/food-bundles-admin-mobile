@@ -44,7 +44,7 @@ export default function VoucherDetailScreen() {
   const restaurant = MOCK_RESTAURANTS.find((r) => r.id === voucher.restaurantId);
 
   return (
-    <AdminScreen title={voucher.restaurantName}>
+    <AdminScreen title={voucher.restaurantName} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <Card>
           <Text style={[styles.code, { color: colors.leaf }]}>{voucher.code}</Text>

@@ -47,7 +47,7 @@ export default function FarmerSubmissionDetailScreen() {
   const farmer = MOCK_FARMERS.find((f) => f.id === submission.farmerId);
 
   return (
-    <AdminScreen title={submission.productName}>
+    <AdminScreen title={submission.productName} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         {farmer ? (
           <View style={styles.farmerRow}>
