@@ -1,5 +1,4 @@
 import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTheme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
@@ -11,8 +10,19 @@ export interface AdminScreenProps {
   children: React.ReactNode;
 }
 
-/** Wraps every (admin)/ screen's body with the sticky AdminHeader + safe-area bottom inset. */
-export function AdminScreen({ title, children }: AdminScreenProps) {
+export interface AdminScreenExtraProps {
+  /** Back arrow in the header (44x44, chevron-back) calling router.back(). Default false. */
+  showBack?: boolean;
+}
+
+/**
+ * Wraps every (admin)/ screen's body with the sticky AdminHeader. The bottom edge is no longer
+ * given a safe-area inset here — AdminShell now renders a persistent BottomNavBar below every
+ * screen's content, and that bar (not the raw device edge) is the real bottom boundary, and it
+ * already accounts for `insets.bottom` itself. Giving both the bar and this wrapper a bottom
+ * inset would double the gap.
+ */
+export function AdminScreen({ title, children, showBack = false }: AdminScreenProps & AdminScreenExtraProps) {
   const { colors } = useTheme();
   const user = useAuthStore((state) => state.user);
   const unreadCount = useNotificationsStore((state) => state.notifications.filter((n) => !n.read).length);
@@ -23,11 +33,10 @@ export function AdminScreen({ title, children }: AdminScreenProps) {
         title={title}
         avatarUri={user?.avatarUri ?? ''}
         unreadCount={unreadCount}
+        showBack={showBack}
         onBellPress={() => router.push('/(admin)/notifications' as never)}
       />
-      <SafeAreaView edges={['bottom']} style={styles.body}>
-        {children}
-      </SafeAreaView>
+      <View style={styles.body}>{children}</View>
     </View>
   );
 }
