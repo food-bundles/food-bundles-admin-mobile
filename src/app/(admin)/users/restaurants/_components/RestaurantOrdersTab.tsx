@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View } from 'react-native';
 import { useT } from '@/i18n';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -12,6 +13,7 @@ export interface RestaurantOrdersTabProps {
 export function RestaurantOrdersTab({ restaurantId }: RestaurantOrdersTabProps) {
   const t = useT();
   const orders = MOCK_ORDERS.filter((o) => o.restaurantId === restaurantId);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   if (orders.length === 0) {
     return <EmptyState icon={null} title={t('orders.emptyTitle')} message={t('orders.emptyMessage')} />;
@@ -20,7 +22,12 @@ export function RestaurantOrdersTab({ restaurantId }: RestaurantOrdersTabProps) 
   return (
     <View>
       {orders.map((order) => (
-        <OrderRow key={order.id} order={order} />
+        <OrderRow
+          key={order.id}
+          order={order}
+          expanded={expandedId === order.id}
+          onToggle={() => setExpandedId((prev) => (prev === order.id ? null : order.id))}
+        />
       ))}
     </View>
   );

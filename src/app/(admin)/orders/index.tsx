@@ -38,6 +38,7 @@ export default function OrdersScreen() {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('newest');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -90,7 +91,13 @@ export default function OrdersScreen() {
       </View>
       <DataList
         data={list.items}
-        renderItem={({ item }) => <OrderRow order={item} />}
+        renderItem={({ item }) => (
+          <OrderRow
+            order={item}
+            expanded={expandedId === item.id}
+            onToggle={() => setExpandedId((prev) => (prev === item.id ? null : item.id))}
+          />
+        )}
         keyExtractor={(item) => item.id}
         isLoading={list.isLoading}
         isEmpty={!list.isLoading && list.items.length === 0}

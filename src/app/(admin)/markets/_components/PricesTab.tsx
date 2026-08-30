@@ -7,8 +7,10 @@ import { useT } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { Card } from '@/components/ui/Card';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
+import { ExpandRow } from '@/components/data/ExpandRow';
 import { MultiSeriesAreaChart, type MultiSeriesDatum, type MultiSeriesSpec } from '@/components/charts/MultiSeriesAreaChart';
 import { BarChart } from '@/components/charts/BarChart';
+import { Sparkline } from '@/components/charts/Sparkline';
 import { COMMODITIES, MOCK_MARKET_PRICE_SERIES, computeMovingAverage7, type CommodityId } from '@/mocks/market-prices';
 import { MOCK_MARKETS } from '@/mocks/markets';
 
@@ -30,6 +32,7 @@ export function PricesTab() {
   const [commodityId, setCommodityId] = useState<CommodityId>(COMMODITIES[0].id);
   const [range, setRange] = useState<RangeKey>('week');
   const [showMa, setShowMa] = useState(false);
+  const [expandedMarketId, setExpandedMarketId] = useState<string | null>(null);
 
   const commodity = COMMODITIES.find((c) => c.id === commodityId) ?? COMMODITIES[0];
   const seriesForCommodity = MOCK_MARKET_PRICE_SERIES.filter((s) => s.commodityId === commodityId);
@@ -92,13 +95,28 @@ export function PricesTab() {
         <View style={styles.legend}>
           {MARKET_SERIES_SPEC.map((spec) => {
             const market = MOCK_MARKETS.find((m) => m.id === spec.key);
-            const latest = seriesForCommodity.find((s) => s.marketId === spec.key)?.days.slice(-1)[0]?.close ?? 0;
+            const marketDays = seriesForCommodity.find((s) => s.marketId === spec.key)?.days ?? [];
+            const latest = marketDays.slice(-1)[0]?.close ?? 0;
+            const sparklineData = marketDays.slice(-5).map((d, i) => ({ x: i, y: d.close }));
             return (
-              <View key={spec.key} style={styles.legendRow}>
-                <View style={[styles.dot, { backgroundColor: colors[spec.colorKey] }]} />
-                <Text style={[styles.legendName, { color: colors.body }]}>{market?.name}</Text>
-                <Text style={[styles.legendValue, { color: colors.ink }]}>{formatRwf(latest)}</Text>
-              </View>
+              <ExpandRow
+                key={spec.key}
+                expanded={expandedMarketId === spec.key}
+                onToggle={() => setExpandedMarketId((prev) => (prev === spec.key ? null : spec.key))}
+                accessibilityLabel={market?.name ?? spec.key}
+                header={
+                  <View style={styles.legendRow}>
+                    <View style={[styles.dot, { backgroundColor: colors[spec.colorKey] }]} />
+                    <Text style={[styles.legendName, { color: colors.body }]}>{market?.name}</Text>
+                    <Text style={[styles.legendValue, { color: colors.ink }]}>{formatRwf(latest)}</Text>
+                  </View>
+                }
+              >
+                <View style={styles.sparklineRow}>
+                  <Text style={[styles.legendName, { color: colors.muted }]}>{t('markets.priceTrend')}</Text>
+                  <Sparkline data={sparklineData} colorKey={spec.colorKey} />
+                </View>
+              </ExpandRow>
             );
           })}
         </View>
@@ -131,6 +149,7 @@ const styles = StyleSheet.create({
   dot: { width: 10, height: 10, borderRadius: 5 },
   legendName: { ...text.body, flex: 1 },
   legendValue: { ...text.bodySemi },
+  sparklineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: space.lg },
   fab: {
     position: 'absolute',
     right: space.lg,
