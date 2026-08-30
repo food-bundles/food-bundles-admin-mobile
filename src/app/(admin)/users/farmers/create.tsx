@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
@@ -30,12 +30,14 @@ export default function CreateFarmerScreen() {
     <AdminScreen title={t('farmers.title')}>
       <ScrollView contentContainerStyle={styles.content}>
         <ImageUpload uri={imageUri} onChange={setImageUri} shape="circle" accessibilityLabel={t('restaurants.fieldName')} />
-        <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
-        <Input label={t('auth.email')} value={email} onChangeText={setEmail} keyboardType="email-address" />
-        <Input label={t('restaurants.fieldPhone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
-        <Input label={t('farmers.fieldFarmName')} value={farmName} onChangeText={setFarmName} />
-        <Input label={t('farmers.fieldFarmType')} value={farmType} onChangeText={setFarmType} />
-        <Input label={t('farmers.fieldLocation')} value={location} onChangeText={setLocation} />
+        <View style={styles.fields}>
+          <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
+          <Input label={t('auth.email')} value={email} onChangeText={setEmail} keyboardType="email-address" />
+          <Input label={t('restaurants.fieldPhone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+          <Input label={t('farmers.fieldFarmName')} value={farmName} onChangeText={setFarmName} />
+          <Input label={t('farmers.fieldFarmType')} value={farmType} onChangeText={setFarmType} />
+          <Input label={t('farmers.fieldLocation')} value={location} onChangeText={setLocation} />
+        </View>
         <Button variant="primary" fullWidth onPress={handleSubmit}>
           {t('common.save')}
         </Button>
@@ -46,4 +48,6 @@ export default function CreateFarmerScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl, gap: space.md, alignItems: 'center' },
+  // See RestaurantInfoTab.tsx: alignItems: 'center' shrink-wraps children with no explicit width.
+  fields: { width: '100%', gap: space.md },
 });

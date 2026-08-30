@@ -43,10 +43,12 @@ export function ProductForm({ initial, onSubmit, submitLabel }: ProductFormProps
   return (
     <View style={styles.container}>
       <ImageUpload uri={imageUri} onChange={setImageUri} shape="rounded" size={160} accessibilityLabel={name || t('products.title')} />
-      <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
-      <Input label={t('products.fieldPrice')} value={price} onChangeText={setPrice} keyboardType="numeric" />
-      <Input label={t('products.fieldStock')} value={stock} onChangeText={setStock} keyboardType="numeric" />
-      <Input label={t('products.fieldDescription')} value={description} onChangeText={setDescription} />
+      <View style={styles.fields}>
+        <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
+        <Input label={t('products.fieldPrice')} value={price} onChangeText={setPrice} keyboardType="numeric" />
+        <Input label={t('products.fieldStock')} value={stock} onChangeText={setStock} keyboardType="numeric" />
+        <Input label={t('products.fieldDescription')} value={description} onChangeText={setDescription} />
+      </View>
       <Button variant="primary" fullWidth onPress={handleSubmit}>
         {submitLabel}
       </Button>
@@ -56,4 +58,7 @@ export function ProductForm({ initial, onSubmit, submitLabel }: ProductFormProps
 
 const styles = StyleSheet.create({
   container: { gap: space.md, alignItems: 'center' },
+  // See RestaurantInfoTab.tsx for why: alignItems: 'center' (needed to center the photo) shrink-wraps
+  // any child with no explicit width, which was collapsing every Input to its own content size.
+  fields: { width: '100%', gap: space.md },
 });
