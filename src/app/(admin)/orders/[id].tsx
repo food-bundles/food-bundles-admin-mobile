@@ -5,10 +5,11 @@ import { space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore } from '@/i18n';
 import { formatDate } from '@/lib/date';
 import { useRoleGuard } from '@/lib/roleGuard';
+import { useOrdersStore } from '@/stores/ordersStore';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { MOCK_ORDERS, type OrderStatus } from '@/mocks/orders';
+import type { OrderStatus } from '@/mocks/orders';
 import { MOCK_RESTAURANTS } from '@/mocks/restaurants';
 import { OrderStatusRail } from './_components/OrderStatusRail';
 import { OrderRestaurantCard } from './_components/OrderRestaurantCard';
@@ -23,8 +24,9 @@ export default function OrderDetailScreen() {
   const { colors } = useTheme();
   const t = useT();
   const language = useLanguageStore((state) => state.language);
+  const orders = useOrdersStore((state) => state.orders);
 
-  const baseOrder = useMemo(() => MOCK_ORDERS.find((o) => o.id === id), [id]);
+  const baseOrder = useMemo(() => orders.find((o) => o.id === id), [orders, id]);
   const [statusOverride, setStatusOverride] = useState<OrderStatus | null>(null);
   const order = baseOrder && statusOverride ? { ...baseOrder, status: statusOverride } : baseOrder;
   const restaurant = order ? MOCK_RESTAURANTS.find((r) => r.id === order.restaurantId) : undefined;

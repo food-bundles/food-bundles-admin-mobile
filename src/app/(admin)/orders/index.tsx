@@ -1,23 +1,29 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { hit, space, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { useRoleGuard } from '@/lib/roleGuard';
 import { usePaginatedList } from '@/lib/usePaginatedList';
+import { useAuthStore } from '@/stores/authStore';
+import { useOrdersStore } from '@/stores/ordersStore';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { DataList } from '@/components/data/DataList';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
 import { PaginationBar } from '@/components/data/PaginationBar';
 import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 import { ActionMenu } from '@/components/modals/ActionMenu';
-import { MOCK_ORDERS, type Order, type OrderStatus } from '@/mocks/orders';
+import type { Order, OrderStatus } from '@/mocks/orders';
 import { OrderRow } from './_components/OrderRow';
 import { STATUS_KEY } from './_components/orderSteps';
 
 const STATUS_FILTERS: (OrderStatus | 'ALL')[] = [
   'ALL', 'PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'IN_TRANSIT', 'DELIVERED', 'CANCELLED', 'REFUNDED',
 ];
+
+const CAN_CREATE_ROLES = ['SUPERUSER', 'ADMIN'];
 
 type SortKey = 'newest' | 'oldest' | 'totalAsc' | 'totalDesc';
 
@@ -34,20 +40,23 @@ export default function OrdersScreen() {
   useRoleGuard('orders');
   const { colors } = useTheme();
   const t = useT();
+  const role = useAuthStore((state) => state.user?.role);
+  const orders = useOrdersStore((state) => state.orders);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'ALL'>('ALL');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('newest');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const canCreate = role ? CAN_CREATE_ROLES.includes(role) : false;
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const bySearch = MOCK_ORDERS.filter(
+    const bySearch = orders.filter(
       (o) => !q || o.id.toLowerCase().includes(q) || o.restaurantName.toLowerCase().includes(q),
     );
     const byStatus = statusFilter === 'ALL' ? bySearch : bySearch.filter((o) => o.status === statusFilter);
     return sortOrders(byStatus, sort);
-  }, [search, statusFilter, sort]);
+  }, [orders, search, statusFilter, sort]);
 
   const fetchPage = useCallback(
     async (page: number, pageSize: number) => {
@@ -73,6 +82,13 @@ export default function OrdersScreen() {
 
   return (
     <AdminScreen title={t('orders.title')}>
+      {canCreate ? (
+        <View style={styles.createRow}>
+          <Button variant="primary" size="sm" onPress={() => router.push('/(admin)/orders/create-behalf' as never)}>
+            {t('orderBehalf.createOrder')}
+          </Button>
+        </View>
+      ) : null}
       <View style={styles.searchRow}>
         <View style={styles.searchInput}>
           <Input label={t('common.search')} value={search} onChangeText={setSearch} placeholder={t('orders.searchPlaceholder')} />
@@ -123,6 +139,7 @@ export default function OrdersScreen() {
 }
 
 const styles = StyleSheet.create({
+  createRow: { paddingHorizontal: space.lg, paddingTop: space.md, alignItems: 'flex-start' },
   searchRow: { flexDirection: 'row', alignItems: 'flex-end', gap: space.sm, paddingHorizontal: space.lg, paddingTop: space.md },
   searchInput: { flex: 1 },
   sortButton: { width: hit.min, height: hit.min, alignItems: 'center', justifyContent: 'center' },
