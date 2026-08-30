@@ -1,0 +1,38 @@
+/** Splash screen, bottom nav, account panel, and other cross-cutting chrome copy added in the UI fix pass. */
+export const enBranding = {
+  'splash.appName': 'FoodBundles Admin',
+  'splash.tagline': "Powering Rwanda's produce supply chain",
+
+  'tab.overview': 'Overview',
+  'tab.orders': 'Orders',
+  'tab.users': 'Users',
+  'tab.stock': 'Stock',
+  'tab.markets': 'Markets',
+  'tab.reports': 'Reports',
+  'tab.account': 'Account',
+  'tab.aiSupport': 'AI Support',
+
+  'account.title': 'Account',
+  'account.myProfile': 'My profile',
+  'account.changePassword': 'Change password',
+  'account.changePasswordSent': 'Password change link sent to your email',
+  'account.theme': 'Theme',
+  'account.themeLight': 'Light',
+  'account.themeDark': 'Dark',
+  'account.themeSystem': 'System',
+  'account.language': 'Language',
+  'account.signOut': 'Sign out',
+  'account.signOutConfirm': 'Sign out of FoodBundles Admin?',
+
+  'profile.title': 'My profile',
+  'profile.name': 'Name',
+  'profile.email': 'Email',
+  'profile.phone': 'Phone',
+  'profile.role': 'Role',
+  'profile.twoFactorEnabled': '2FA enabled',
+  'profile.twoFactorDisabled': '2FA not enabled',
+  'profile.manage2fa': 'Manage authenticator',
+  'profile.saveChanges': 'Save changes',
+  'profile.saved': 'Profile updated',
+  'profile.changePhoto': 'Change photo',
+} as const;
