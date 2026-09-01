@@ -1,5 +1,14 @@
 export type ContactStatus = 'UNREAD' | 'READ' | 'REPLIED';
 
+export interface ConversationMessage {
+  id: string;
+  from: 'contact' | 'admin';
+  text: string;
+  timestamp: string;
+  attachmentName?: string;
+  attachmentIsImage?: boolean;
+}
+
 export interface ContactSubmission {
   id: string;
   name: string;
@@ -8,10 +17,20 @@ export interface ContactSubmission {
   submittedAt: string;
   status: ContactStatus;
   reply: string | null;
+  /** Full chat thread: the original submission plus 0-2 admin replies when status is REPLIED. */
+  messages: ConversationMessage[];
 }
 
-/** 8 contact form submissions: mix of READ, UNREAD, REPLIED. */
-export const MOCK_CONTACT_SUBMISSIONS: ContactSubmission[] = [
+function thread(id: string, originalText: string, submittedAt: string, reply: string | null): ConversationMessage[] {
+  const messages: ConversationMessage[] = [{ id: `${id}-m1`, from: 'contact', text: originalText, timestamp: submittedAt }];
+  if (reply) {
+    const replyTime = new Date(new Date(submittedAt).getTime() + 6 * 3_600_000).toISOString();
+    messages.push({ id: `${id}-m2`, from: 'admin', text: reply, timestamp: replyTime });
+  }
+  return messages;
+}
+
+const RAW_SUBMISSIONS: Omit<ContactSubmission, 'messages'>[] = [
   {
     id: 'contact-001',
     name: 'Jean Pierre Habyarimana',
@@ -43,7 +62,7 @@ export const MOCK_CONTACT_SUBMISSIONS: ContactSubmission[] = [
     id: 'contact-004',
     name: 'Sarah Uwamahoro',
     email: 'sarah.uwamahoro@gmail.com',
-    message: 'Can I get an invoice for last month\'s orders for tax purposes?',
+    message: "Can I get an invoice for last month's orders for tax purposes?",
     submittedAt: '2026-08-18T08:15:00Z',
     status: 'REPLIED',
     reply: 'You can download monthly invoices from your restaurant dashboard under Reports.',
@@ -85,3 +104,9 @@ export const MOCK_CONTACT_SUBMISSIONS: ContactSubmission[] = [
     reply: null,
   },
 ];
+
+/** 8 contact form submissions: mix of READ, UNREAD, REPLIED. Each carries a full messages[] thread. */
+export const MOCK_CONTACT_SUBMISSIONS: ContactSubmission[] = RAW_SUBMISSIONS.map((s) => ({
+  ...s,
+  messages: thread(s.id, s.message, s.submittedAt, s.reply),
+}));
