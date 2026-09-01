@@ -17,10 +17,27 @@ export interface Campaign {
   status: CampaignStatus;
 }
 
+/**
+ * Realistic Rwandan email addresses matching the same first.last@gmail.com / firstname@food.rw
+ * conventions already used throughout restaurants.ts, farmers.ts, and affiliators.ts — replacing
+ * the earlier placeholder subscriberN@example.rw pattern.
+ */
+const SUBSCRIBER_NAMES: [string, string][] = [
+  ['jean.mugisha', 'gmail.com'], ['claudine.uwase', 'gmail.com'], ['eric.niyonzima', 'gmail.com'],
+  ['aline.mukamana', 'gmail.com'], ['patrick.habimana', 'gmail.com'], ['grace.ingabire', 'gmail.com'],
+  ['david.nsengimana', 'gmail.com'], ['diane.uwimana', 'gmail.com'], ['samuel.byiringiro', 'gmail.com'],
+  ['carine.mutoni', 'gmail.com'], ['emmanuel.hakizimana', 'gmail.com'], ['bella.ishimwe', 'gmail.com'],
+  ['felix.rugamba', 'gmail.com'], ['joyce.uwera', 'gmail.com'], ['bosco.ntawuruhunga', 'gmail.com'],
+  ['sandrine.umutoni', 'gmail.com'], ['alex.mucyo', 'gmail.com'], ['pascal.harerimana', 'gmail.com'],
+  ['esther.mukashema', 'gmail.com'], ['olivier.gasana', 'gmail.com'], ['jackie.umuhoza', 'gmail.com'],
+  ['kevin.turatsinze', 'gmail.com'], ['nadine.iradukunda', 'gmail.com'], ['vincent.bizumuremyi', 'gmail.com'],
+  ['claire.nyiraneza', 'gmail.com'],
+];
+
 /** 25 newsletter subscribers. */
-export const MOCK_SUBSCRIBERS: NewsletterSubscriber[] = Array.from({ length: 25 }, (_, i) => ({
+export const MOCK_SUBSCRIBERS: NewsletterSubscriber[] = SUBSCRIBER_NAMES.map(([local, domain], i) => ({
   id: `sub-${String(i + 1).padStart(3, '0')}`,
-  email: `subscriber${i + 1}@example.rw`,
+  email: `${local}@${domain}`,
   subscribedAt: new Date(2026, 0, 1 + i * 6).toISOString(),
 }));
 
