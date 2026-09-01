@@ -18,6 +18,7 @@ import { rwFinancialBehalf } from './rwFinancialBehalf';
 import { rwContactChat } from './rwContactChat';
 import { rwRecipientHistory } from './rwRecipientHistory';
 import { rwNewsletterDetail } from './rwNewsletterDetail';
+import { rwTeamTwoFa } from './rwTeamTwoFa';
 
 type ChromeKey = Exclude<
   keyof typeof enTable,
@@ -40,6 +41,7 @@ type ChromeKey = Exclude<
   | keyof typeof rwContactChat
   | keyof typeof rwRecipientHistory
   | keyof typeof rwNewsletterDetail
+  | keyof typeof rwTeamTwoFa
 >;
 
 const rwChrome: Record<ChromeKey, string> = {
@@ -148,4 +150,5 @@ export const rw: Record<keyof typeof enTable, string> = {
   ...rwContactChat,
   ...rwRecipientHistory,
   ...rwNewsletterDetail,
+  ...rwTeamTwoFa,
 };
