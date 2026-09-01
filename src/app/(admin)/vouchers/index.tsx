@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { space, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { useRoleGuard } from '@/lib/roleGuard';
 import { useAuthStore } from '@/stores/authStore';
+import { useVouchersStore } from '@/stores/vouchersStore';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { DataList } from '@/components/data/DataList';
+import { Button } from '@/components/ui/Button';
 import { MOCK_LOAN_APPLICATIONS, type LoanApplication } from '@/mocks/loanApplications';
-import { MOCK_VOUCHERS } from '@/mocks/vouchers';
 import { VoucherTabs, type VoucherTabKey } from './_components/VoucherTabs';
 import { LoanStats } from './_components/LoanStats';
 import { LoanApplicationRow } from './_components/LoanApplicationRow';
 import { LoanApplicationSheet } from './_components/LoanApplicationSheet';
 import { VoucherRow } from './_components/VoucherRow';
+import { CreateVoucherSheet } from './_components/CreateVoucherSheet';
 
 const CAN_MANAGE_ROLES = ['SUPERUSER', 'ADMIN'];
 
@@ -27,6 +29,8 @@ export default function VouchersScreen() {
   const [tab, setTab] = useState<VoucherTabKey>('loanApplications');
   const [applications, setApplications] = useState<LoanApplication[]>(MOCK_LOAN_APPLICATIONS);
   const [selected, setSelected] = useState<LoanApplication | null>(null);
+  const [createVoucherOpen, setCreateVoucherOpen] = useState(false);
+  const vouchers = useVouchersStore((state) => state.vouchers);
 
   const handleApprove = (approvedLimit: number) => {
     if (!selected) return;
@@ -68,16 +72,25 @@ export default function VouchersScreen() {
           />
         </ScrollView>
       ) : (
-        <DataList
-          data={MOCK_VOUCHERS}
-          renderItem={({ item }) => <VoucherRow voucher={item} />}
-          keyExtractor={(item) => item.id}
-          isLoading={false}
-          isEmpty={MOCK_VOUCHERS.length === 0}
-          emptyTitle={t('vouchers.emptyVouchersTitle')}
-          emptyMessage={t('vouchers.emptyVouchersMessage')}
-          emptyIcon={<Ionicons name="ticket-outline" size={20} color={colors.leaf} />}
-        />
+        <View style={styles.vouchersTab}>
+          {canManage ? (
+            <View style={styles.createRow}>
+              <Button variant="primary" size="sm" onPress={() => setCreateVoucherOpen(true)}>
+                {t('vouchers.createOnBehalfTitle')}
+              </Button>
+            </View>
+          ) : null}
+          <DataList
+            data={vouchers}
+            renderItem={({ item }) => <VoucherRow voucher={item} />}
+            keyExtractor={(item) => item.id}
+            isLoading={false}
+            isEmpty={vouchers.length === 0}
+            emptyTitle={t('vouchers.emptyVouchersTitle')}
+            emptyMessage={t('vouchers.emptyVouchersMessage')}
+            emptyIcon={<Ionicons name="ticket-outline" size={20} color={colors.leaf} />}
+          />
+        </View>
       )}
       <LoanApplicationSheet
         application={selected}
@@ -86,10 +99,13 @@ export default function VouchersScreen() {
         onApprove={handleApprove}
         onReject={handleReject}
       />
+      <CreateVoucherSheet visible={createVoucherOpen} onClose={() => setCreateVoucherOpen(false)} />
     </AdminScreen>
   );
 }
 
 const styles = StyleSheet.create({
   content: { paddingBottom: space.xxxl, gap: space.md },
+  vouchersTab: { flex: 1 },
+  createRow: { paddingHorizontal: space.lg, paddingVertical: space.sm, alignItems: 'flex-start' },
 });

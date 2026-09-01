@@ -14,6 +14,7 @@ import { frOrderBehalf } from './frOrderBehalf';
 import { frImages } from './frImages';
 import { frProductDetail } from './frProductDetail';
 import { frReports } from './frReports';
+import { frFinancialBehalf } from './frFinancialBehalf';
 
 type ChromeKey = Exclude<
   keyof typeof enTable,
@@ -32,6 +33,7 @@ type ChromeKey = Exclude<
   | keyof typeof frImages
   | keyof typeof frProductDetail
   | keyof typeof frReports
+  | keyof typeof frFinancialBehalf
 >;
 
 const frChrome: Record<ChromeKey, string> = {
@@ -136,4 +138,5 @@ export const fr: Record<keyof typeof enTable, string> = {
   ...frImages,
   ...frProductDetail,
   ...frReports,
+  ...frFinancialBehalf,
 };

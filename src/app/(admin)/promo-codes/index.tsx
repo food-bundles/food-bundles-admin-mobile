@@ -8,15 +8,18 @@ import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { DataList } from '@/components/data/DataList';
 import { Button } from '@/components/ui/Button';
-import { MOCK_PROMO_CODES } from '@/mocks/promo-codes';
+import { usePromoCodesStore } from '@/stores/promoCodesStore';
+import type { PromoCode } from '@/mocks/promo-codes';
 import { PromoCodeRow } from './_components/PromoCodeRow';
+import { PromoCodeDetailSheet } from './_components/PromoCodeDetailSheet';
 
-/** Promo code list: code, type, value, uses, expiry, status. Built from promo-codes/page.tsx. */
+/** Promo code list: code, type, value, uses, expiry, status. Tap a row for the detail sheet. Built from promo-codes/page.tsx. */
 export default function PromoCodesScreen() {
   useRoleGuard('operations');
   const { colors } = useTheme();
   const t = useT();
-  const [codes] = useState(MOCK_PROMO_CODES);
+  const codes = usePromoCodesStore((state) => state.codes);
+  const [detailTarget, setDetailTarget] = useState<PromoCode | null>(null);
 
   return (
     <AdminScreen title={t('promoCodes.title')}>
@@ -27,7 +30,7 @@ export default function PromoCodesScreen() {
       </View>
       <DataList
         data={codes}
-        renderItem={({ item }) => <PromoCodeRow code={item} />}
+        renderItem={({ item }) => <PromoCodeRow code={item} onPress={() => setDetailTarget(item)} />}
         keyExtractor={(item) => item.id}
         isLoading={false}
         isEmpty={codes.length === 0}
@@ -35,6 +38,7 @@ export default function PromoCodesScreen() {
         emptyMessage={t('promoCodes.emptyMessage')}
         emptyIcon={<Ionicons name="pricetag-outline" size={20} color={colors.leaf} />}
       />
+      <PromoCodeDetailSheet code={detailTarget} onClose={() => setDetailTarget(null)} />
     </AdminScreen>
   );
 }

@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
 import { text, useTheme } from '@/theme';
 import { useT, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
@@ -24,17 +23,18 @@ const STATUS_KEY: Record<PromoStatus, TranslationKey> = {
 
 export interface PromoCodeRowProps {
   code: PromoCode;
+  onPress: () => void;
 }
 
-/** Code (monospace) + type badge + value + uses (N/max) + expiry + status chip. */
-export function PromoCodeRow({ code }: PromoCodeRowProps) {
+/** Code (monospace) + type badge + value + uses (N/max) + expiry + status chip. Tap opens the detail sheet. */
+export function PromoCodeRow({ code, onPress }: PromoCodeRowProps) {
   const { colors } = useTheme();
   const t = useT();
   const status = statusOf(code, new Date());
   const value = code.type === 'PERCENT' ? `${code.value}%` : formatRwf(code.value);
 
   return (
-    <Card onPress={() => router.push(`/(admin)/promo-codes/${code.id}`)} accessibilityLabel={code.code}>
+    <Card onPress={onPress} accessibilityLabel={code.code}>
       <View style={styles.row}>
         <View style={styles.textCol}>
           <Text style={[styles.code, { color: colors.ink }]}>{code.code}</Text>
