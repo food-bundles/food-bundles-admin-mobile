@@ -18,6 +18,7 @@ import { useFarmerSubmissionsStore, type SubmissionGrade } from '@/stores/farmer
 import { MOCK_FARMERS } from '@/mocks/farmers';
 import { GradeSelector } from './_components/GradeSelector';
 import { PriceNegotiationCard } from './_components/PriceNegotiationCard';
+import { SubmissionHeaderImage } from './_components/SubmissionHeaderImage';
 
 const ACTION_TITLE_KEY: Record<'APPROVED' | 'REJECTED' | 'VERIFIED', TranslationKey> = {
   APPROVED: 'farmerSubmissions.approve',
@@ -55,69 +56,72 @@ export default function FarmerSubmissionDetailScreen() {
   return (
     <AdminScreen title={submission.productName} showBack>
       <ScrollView contentContainerStyle={styles.content}>
-        {farmer ? (
-          <View style={styles.farmerRow}>
-            <Text style={[styles.farmerName, { color: colors.ink }]}>{farmer.name}</Text>
-            <Badge tone="leaf" label={farmer.farmName} />
+        <SubmissionHeaderImage productName={submission.productName} farmerName={farmer?.name ?? ''} />
+
+        <View style={styles.body}>
+          {farmer ? (
+            <View style={styles.farmerRow}>
+              <Badge tone="leaf" label={farmer.farmName} />
+            </View>
+          ) : null}
+
+          <Card>
+            <Text style={[styles.product, { color: colors.ink }]}>{submission.productName}</Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>
+              {t('farmerSubmissions.quantity')}: {submission.quantity} {submission.unit}
+            </Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>
+              {t('farmerSubmissions.pricePerUnit')}: {formatRwf(submission.pricePerUnit)}
+            </Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>{formatDate(submission.submittedAt, language)}</Text>
+          </Card>
+
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('farmerSubmissions.qualityPhotos')}</Text>
+          <View style={styles.photoRow}>
+            {qualityPhotosFor(submission.productName).map((uri, index) => (
+              <Image
+                key={uri + index}
+                source={{ uri }}
+                style={[styles.photo, { backgroundColor: colors.neutral }]}
+                accessibilityLabel={`${submission.productName} quality photo ${index + 1}`}
+              />
+            ))}
           </View>
-        ) : null}
 
-        <Card>
-          <Text style={[styles.product, { color: colors.ink }]}>{submission.productName}</Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('farmerSubmissions.quantity')}: {submission.quantity} {submission.unit}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('farmerSubmissions.pricePerUnit')}: {formatRwf(submission.pricePerUnit)}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>{formatDate(submission.submittedAt, language)}</Text>
-        </Card>
+          <PriceNegotiationCard
+            productName={submission.productName}
+            requestedPrice={submission.pricePerUnit}
+            counterOffer={counterOffer}
+            onChangeCounterOffer={setCounterOffer}
+          />
 
-        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('farmerSubmissions.qualityPhotos')}</Text>
-        <View style={styles.photoRow}>
-          {qualityPhotosFor(submission.productName).map((uri, index) => (
-            <Image
-              key={uri + index}
-              source={{ uri }}
-              style={[styles.photo, { backgroundColor: colors.neutral }]}
-              accessibilityLabel={`${submission.productName} quality photo ${index + 1}`}
-            />
-          ))}
+          {submission.grade ? (
+            <View style={styles.gradeRow}>
+              <Text style={[styles.detail, { color: colors.muted }]}>{t('farmerSubmissions.gradeLabel')}:</Text>
+              <Badge tone={submission.grade === 'REJECTED' ? 'chili' : 'leaf'} label={submission.grade} />
+            </View>
+          ) : null}
+
+          {submission.status === 'PENDING' ? (
+            <View style={styles.actions}>
+              <Input label={t('farmerSubmissions.approveNote')} value={note} onChangeText={setNote} />
+              <GradeSelector value={grade} onChange={setGrade} />
+              <Button variant="primary" fullWidth onPress={() => setConfirmAction('APPROVED')}>
+                {t('farmerSubmissions.approve')}
+              </Button>
+              <Button variant="destructive" fullWidth onPress={() => setConfirmAction('REJECTED')}>
+                {t('farmerSubmissions.reject')}
+              </Button>
+            </View>
+          ) : null}
+          {submission.status === 'APPROVED' ? (
+            <View style={styles.actions}>
+              <Button variant="primary" fullWidth onPress={() => setConfirmAction('VERIFIED')}>
+                {t('farmerSubmissions.verify')}
+              </Button>
+            </View>
+          ) : null}
         </View>
-
-        <PriceNegotiationCard
-          productName={submission.productName}
-          requestedPrice={submission.pricePerUnit}
-          counterOffer={counterOffer}
-          onChangeCounterOffer={setCounterOffer}
-        />
-
-        {submission.grade ? (
-          <View style={styles.gradeRow}>
-            <Text style={[styles.detail, { color: colors.muted }]}>{t('farmerSubmissions.gradeLabel')}:</Text>
-            <Badge tone={submission.grade === 'REJECTED' ? 'chili' : 'leaf'} label={submission.grade} />
-          </View>
-        ) : null}
-
-        {submission.status === 'PENDING' ? (
-          <View style={styles.actions}>
-            <Input label={t('farmerSubmissions.approveNote')} value={note} onChangeText={setNote} />
-            <GradeSelector value={grade} onChange={setGrade} />
-            <Button variant="primary" fullWidth onPress={() => setConfirmAction('APPROVED')}>
-              {t('farmerSubmissions.approve')}
-            </Button>
-            <Button variant="destructive" fullWidth onPress={() => setConfirmAction('REJECTED')}>
-              {t('farmerSubmissions.reject')}
-            </Button>
-          </View>
-        ) : null}
-        {submission.status === 'APPROVED' ? (
-          <View style={styles.actions}>
-            <Button variant="primary" fullWidth onPress={() => setConfirmAction('VERIFIED')}>
-              {t('farmerSubmissions.verify')}
-            </Button>
-          </View>
-        ) : null}
       </ScrollView>
 
       <ConfirmDialog
@@ -145,9 +149,9 @@ export default function FarmerSubmissionDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl, gap: space.md },
+  content: { paddingBottom: space.xxxl },
+  body: { paddingHorizontal: space.lg, gap: space.md, marginTop: space.md },
   farmerRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  farmerName: { ...text.h3 },
   product: { ...text.bodySemi },
   detail: { ...text.caption, marginTop: space.xs },
   sectionTitle: { ...text.h3 },
