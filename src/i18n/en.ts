@@ -18,6 +18,7 @@ import { enContactChat } from './enContactChat';
 import { enRecipientHistory } from './enRecipientHistory';
 import { enNewsletterDetail } from './enNewsletterDetail';
 import { enTeamTwoFa } from './enTeamTwoFa';
+import { enChat } from './enChat';
 
 const enChrome = {
   'nav.dashboard': 'Dashboard',
@@ -126,6 +127,7 @@ export const en = {
   ...enRecipientHistory,
   ...enNewsletterDetail,
   ...enTeamTwoFa,
+  ...enChat,
 };
 
 export type TranslationKey = keyof typeof en;

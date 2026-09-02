@@ -24,6 +24,7 @@
     "@shopify/flash-list": "2.0.2",
     "@shopify/react-native-skia": "2.2.12",
     "expo": "^54",
+    "expo-audio": "~1.1.1",
     "expo-clipboard": "~8.0.8",
     "expo-crypto": "~15.0.9",
     "expo-document-picker": "~14.0.8",
