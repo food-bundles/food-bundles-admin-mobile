@@ -1,7 +1,8 @@
-import { View } from 'react-native';
+import { useEffect } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { withLayoutContext } from 'expo-router';
-import { useTheme } from '@/theme';
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { duration, easing, useTheme, lightPalette, darkPalette } from '@/theme';
 import { DrawerNav } from './DrawerNav';
 import { BottomNavBar } from './BottomNavBar';
 
@@ -17,12 +18,24 @@ const LayoutDrawer = withLayoutContext(Navigator);
  * visible across every (admin)/ screen, including detail screens within a section. Used directly
  * as (admin)/_layout.tsx's default export; Expo Router renders the matched child route as a
  * screen inside the Navigator.
+ *
+ * The root background cross-fades between the light/dark `oat` tokens on theme toggle (instead of
+ * flashing instantly) since this View persists across every admin screen.
  */
 export function AdminShell() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
+  const progress = useSharedValue(isDark ? 1 : 0);
+
+  useEffect(() => {
+    progress.value = withTiming(isDark ? 1 : 0, { duration: duration.overlay, easing: easing.standard });
+  }, [isDark, progress]);
+
+  const rootStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(progress.value, [0, 1], [lightPalette.oat, darkPalette.oat]),
+  }));
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.oat }}>
+    <Animated.View style={[{ flex: 1 }, rootStyle]}>
       <LayoutDrawer
         drawerContent={DrawerNav}
         screenOptions={{
@@ -33,6 +46,6 @@ export function AdminShell() {
         }}
       />
       <BottomNavBar />
-    </View>
+    </Animated.View>
   );
 }

@@ -3,6 +3,7 @@ import { space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { Card } from '@/components/ui/Card';
+import { BarChart } from '@/components/charts/BarChart';
 import { commodityComparisonToday, savingsOpportunities } from './marketComparisonGenerators';
 
 /** Commodity price comparison across all 5 markets for today, plus a "Savings opportunity" card. */
@@ -19,6 +20,11 @@ export function MarketComparisonReport() {
         {rows.map((row) => (
           <View key={row.commodityName} style={[styles.commodityBlock, { borderBottomColor: colors.hairline }]}>
             <Text style={[styles.commodityName, { color: colors.ink }]}>{row.commodityName}</Text>
+            <BarChart
+              data={row.pricesByMarket.map((entry, i) => ({ x: i, y: entry.price }))}
+              colorKey="leaf"
+              height={90}
+            />
             {row.pricesByMarket.map((entry) => (
               <View key={entry.marketName} style={styles.priceRow}>
                 <Text style={[styles.marketName, { color: colors.body }]}>{entry.marketName}</Text>

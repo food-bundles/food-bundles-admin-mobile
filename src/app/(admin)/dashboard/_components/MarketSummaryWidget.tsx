@@ -5,6 +5,7 @@ import { useT } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { Card } from '@/components/ui/Card';
 import { PriceChangeBadge } from '@/components/ui/PriceChangeBadge';
+import { StaggerIn } from '@/components/ui/StaggerIn';
 import { COMMODITIES, getSeries } from '@/mocks/market-prices';
 
 interface CommodityRow {
@@ -50,15 +51,14 @@ export function MarketSummaryWidget() {
       <Text style={[styles.title, { color: colors.ink }]}>{t('dashboard.marketSummaryTitle')}</Text>
       <Card>
         {rows.map((row, index) => (
-          <View
-            key={row.name}
-            style={[styles.row, index < rows.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.hairline }]}
-          >
-            <Image source={{ uri: row.imageUri }} style={styles.thumb} accessibilityLabel={row.name} />
-            <Text style={[styles.name, { color: colors.ink }]}>{row.name}</Text>
-            <Text style={[styles.price, { color: colors.ink }]}>{formatRwf(row.price)}</Text>
-            <PriceChangeBadge pct={row.changePct} />
-          </View>
+          <StaggerIn key={row.name} index={index}>
+            <View style={[styles.row, index < rows.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.hairline }]}>
+              <Image source={{ uri: row.imageUri }} style={styles.thumb} accessibilityLabel={row.name} />
+              <Text style={[styles.name, { color: colors.ink }]}>{row.name}</Text>
+              <Text style={[styles.price, { color: colors.ink }]}>{formatRwf(row.price)}</Text>
+              <PriceChangeBadge pct={row.changePct} />
+            </View>
+          </StaggerIn>
         ))}
         <Text
           style={[styles.link, { color: colors.leaf }]}

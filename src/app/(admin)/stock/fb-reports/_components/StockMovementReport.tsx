@@ -3,6 +3,7 @@ import { space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { Card } from '@/components/ui/Card';
 import { MultiSeriesAreaChart, type MultiSeriesSpec } from '@/components/charts/MultiSeriesAreaChart';
+import { BarChart } from '@/components/charts/BarChart';
 import { stockMovementByDay, productsBelowThreshold, turnoverRates } from './stockMovementGenerators';
 
 export interface StockMovementReportProps {
@@ -55,6 +56,9 @@ export function StockMovementReport({ from, to }: StockMovementReportProps) {
 
       <Card>
         <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('fbReports.turnoverTable')}</Text>
+        {turnover.length > 0 ? (
+          <BarChart data={turnover.slice(0, 8).map((row, i) => ({ x: i, y: row.avgDailySales }))} colorKey="leaf" height={120} />
+        ) : null}
         {turnover.map((row) => (
           <View key={row.id} style={styles.turnoverRow}>
             <Text style={[styles.body, { color: colors.ink, flex: 1 }]} numberOfLines={1}>
