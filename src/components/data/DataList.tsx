@@ -1,9 +1,10 @@
 import { FlashList, type ListRenderItem } from '@shopify/flash-list';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { useTheme } from '@/theme';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { SkeletonRow } from '@/components/ui/SkeletonRow';
+import { reportScrollOffset } from '@/stores/scrollNavStore';
 
 export interface DataListProps<T> {
   data: T[];
@@ -55,11 +56,17 @@ export function DataList<T>({
     return <EmptyState icon={emptyIcon} title={emptyTitle} message={emptyMessage} />;
   }
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    reportScrollOffset(event.nativeEvent.contentOffset.y);
+  };
+
   return (
     <FlashList
       data={data}
       renderItem={renderItem}
       keyExtractor={(item) => keyExtractor(item)}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
       refreshControl={
         onRefresh ? (
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.leaf} />

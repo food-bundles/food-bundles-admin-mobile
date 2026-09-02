@@ -1,10 +1,12 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { hit, space, useTheme } from '@/theme';
 import { useT, type TranslationKey } from '@/i18n';
 import { AvatarTabButton } from '@/components/navigation/AvatarTabButton';
+import { useHideOnScroll } from '@/hooks/useHideOnScroll';
 
 interface NavItem {
   key: string;
@@ -69,14 +71,17 @@ export function BottomNavBar() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
+  const barHeight = BOTTOM_NAV_HEIGHT + insets.bottom;
+  const hideStyle = useHideOnScroll(barHeight);
 
   const isActive = (item: NavItem) => pathname.includes(item.matchPrefix);
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.bar,
-        { backgroundColor: colors.paper, borderColor: colors.hairline, height: BOTTOM_NAV_HEIGHT + insets.bottom, paddingBottom: insets.bottom },
+        { backgroundColor: colors.paper, borderColor: colors.hairline, height: barHeight, paddingBottom: insets.bottom },
+        hideStyle,
       ]}
     >
       {LEFT_ITEMS.map((item) => (
@@ -87,7 +92,7 @@ export function BottomNavBar() {
         <TabButton key={item.key} item={item} active={isActive(item)} />
       ))}
       <TabButton item={ACCOUNT_ITEM} active={isActive(ACCOUNT_ITEM)} />
-    </View>
+    </Animated.View>
   );
 }
 
