@@ -8,10 +8,11 @@ import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { MessageBubble } from '@/components/chat/MessageBubble';
+import { ChatComposer, type ComposerAttachment } from '@/components/chat/ChatComposer';
 import { useContactSubmissionsStore } from '@/stores/contactSubmissionsStore';
 import type { ConversationMessage, ContactStatus } from '@/mocks/contact-submissions';
-import { MessageBubble } from './_components/MessageBubble';
-import { ChatInputBar, type PendingAttachment } from './_components/ChatInputBar';
+import type { ChatMessage } from '@/mocks/chat';
 
 const STATUS_TONE = { UNREAD: 'marigold', READ: 'neutral', REPLIED: 'leaf' } as const;
 const STATUS_KEY: Record<ContactStatus, TranslationKey> = {
@@ -20,7 +21,27 @@ const STATUS_KEY: Record<ContactStatus, TranslationKey> = {
   REPLIED: 'contactSubmissions.statusReplied',
 };
 
-/** Full chat thread: header (name/email/status/back), inverted message list, attachment-capable input bar, "Mark as resolved". */
+/** Maps the contact-submissions domain message shape onto the shared ChatMessage shape MessageBubble renders. */
+function toChatMessage(message: ConversationMessage): ChatMessage {
+  if (message.voiceUri) {
+    return { id: message.id, senderId: message.from, kind: 'voice', body: '', attachment: message.voiceUri, durationMs: message.voiceDurationMs, sentAt: message.timestamp, deliveredAt: message.timestamp, readAt: message.timestamp };
+  }
+  if (message.attachmentName) {
+    return {
+      id: message.id,
+      senderId: message.from,
+      kind: message.attachmentIsImage ? 'image' : 'file',
+      body: message.text,
+      attachment: message.attachmentName,
+      sentAt: message.timestamp,
+      deliveredAt: message.timestamp,
+      readAt: message.timestamp,
+    };
+  }
+  return { id: message.id, senderId: message.from, kind: 'text', body: message.text, sentAt: message.timestamp, deliveredAt: message.timestamp, readAt: message.timestamp };
+}
+
+/** Full chat thread: header (name/email/status/back), inverted message list, attachment- and voice-note-capable composer, "Mark as resolved". */
 export default function ContactSubmissionDetailScreen() {
   useRoleGuard('operations');
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -41,12 +62,14 @@ export default function ContactSubmissionDetailScreen() {
 
   const inverted = [...submission.messages].reverse();
 
-  const handleSend = (draft: string, attachment: PendingAttachment | null) => {
+  const handleSend = (draft: string, attachment: ComposerAttachment | null) => {
     sendMessage({
       submissionId: submission.id,
-      text: draft || (attachment?.isImage ? t('contactSubmissions.photoAttached') : (attachment?.name ?? '')),
-      attachmentName: attachment?.name,
-      attachmentIsImage: attachment?.isImage,
+      text: draft || (attachment?.kind === 'image' ? t('contactSubmissions.photoAttached') : (attachment?.label ?? '')),
+      attachmentName: attachment?.kind !== 'voice' ? attachment?.uri : undefined,
+      attachmentIsImage: attachment?.kind === 'image',
+      voiceUri: attachment?.kind === 'voice' ? attachment.uri : undefined,
+      voiceDurationMs: attachment?.kind === 'voice' ? attachment.durationMs : undefined,
     });
   };
 
@@ -68,10 +91,10 @@ export default function ContactSubmissionDetailScreen() {
           data={inverted}
           inverted
           keyExtractor={(item: ConversationMessage) => item.id}
-          renderItem={({ item }) => <MessageBubble message={item} />}
+          renderItem={({ item }) => <MessageBubble message={toChatMessage(item)} isOwn={item.from === 'admin'} />}
           contentContainerStyle={styles.list}
         />
-        <ChatInputBar onSend={handleSend} />
+        <ChatComposer onSend={handleSend} />
       </KeyboardAvoidingView>
     </AdminScreen>
   );

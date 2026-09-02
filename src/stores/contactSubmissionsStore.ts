@@ -7,6 +7,8 @@ export interface SendMessageInput {
   text: string;
   attachmentName?: string;
   attachmentIsImage?: boolean;
+  voiceUri?: string;
+  voiceDurationMs?: number;
 }
 
 interface ContactSubmissionsState {
@@ -18,7 +20,7 @@ interface ContactSubmissionsState {
 /** Session-only mutable chat-thread state, seeded from MOCK_CONTACT_SUBMISSIONS. */
 export const useContactSubmissionsStore = create<ContactSubmissionsState>((set) => ({
   submissions: MOCK_CONTACT_SUBMISSIONS,
-  sendMessage: ({ submissionId, text, attachmentName, attachmentIsImage }) =>
+  sendMessage: ({ submissionId, text, attachmentName, attachmentIsImage, voiceUri, voiceDurationMs }) =>
     set((state) => ({
       submissions: state.submissions.map((s) => {
         if (s.id !== submissionId) return s;
@@ -29,6 +31,8 @@ export const useContactSubmissionsStore = create<ContactSubmissionsState>((set) 
           timestamp: new Date().toISOString(),
           attachmentName,
           attachmentIsImage,
+          voiceUri,
+          voiceDurationMs,
         };
         return { ...s, status: 'REPLIED', reply: text, messages: [...s.messages, message] };
       }),

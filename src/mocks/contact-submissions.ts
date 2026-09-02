@@ -7,6 +7,9 @@ export interface ConversationMessage {
   timestamp: string;
   attachmentName?: string;
   attachmentIsImage?: boolean;
+  /** Voice-note attachment: local recording URI + duration, played back via the shared VoiceNoteBubble. */
+  voiceUri?: string;
+  voiceDurationMs?: number;
 }
 
 export interface ContactSubmission {
