@@ -6,6 +6,7 @@ import { generateId } from '@/lib/id';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import type { PromoCode, PromoType } from '@/mocks/promo-codes';
+import { RestaurantPicker } from './RestaurantPicker';
 
 export interface PromoCodeFormValues {
   code: string;
@@ -13,6 +14,7 @@ export interface PromoCodeFormValues {
   value: number;
   minOrder: number;
   maxUses: number;
+  restaurantIds: string[] | null;
 }
 
 export interface PromoCodeFormProps {
@@ -21,7 +23,7 @@ export interface PromoCodeFormProps {
   submitLabel: string;
 }
 
-/** Code (with auto-generate), type select, value, min order, max uses. Restaurant inclusion/exclusion is out of scope for this phase (no bulk restaurant picker exists yet). */
+/** Code (with auto-generate), type select, value, min order, max uses, bulk restaurant include/exclude picker. */
 export function PromoCodeForm({ initial, onSubmit, submitLabel }: PromoCodeFormProps) {
   const t = useT();
   const [code, setCode] = useState(initial?.code ?? '');
@@ -29,6 +31,7 @@ export function PromoCodeForm({ initial, onSubmit, submitLabel }: PromoCodeFormP
   const [value, setValue] = useState(String(initial?.value ?? ''));
   const [minOrder, setMinOrder] = useState(String(initial?.minOrder ?? ''));
   const [maxUses, setMaxUses] = useState(String(initial?.maxUses ?? ''));
+  const [restaurantIds, setRestaurantIds] = useState<string[] | null>(initial?.restaurantIds ?? null);
 
   const handleGenerate = () => setCode(generateId('PROMO').toUpperCase());
 
@@ -39,6 +42,7 @@ export function PromoCodeForm({ initial, onSubmit, submitLabel }: PromoCodeFormP
       value: Number(value) || 0,
       minOrder: Number(minOrder) || 0,
       maxUses: Number(maxUses) || 0,
+      restaurantIds,
     });
   };
 
@@ -56,6 +60,7 @@ export function PromoCodeForm({ initial, onSubmit, submitLabel }: PromoCodeFormP
       <Input label={t('promoCodes.fieldValue')} value={value} onChangeText={setValue} keyboardType="numeric" />
       <Input label={t('promoCodes.fieldMinOrder')} value={minOrder} onChangeText={setMinOrder} keyboardType="numeric" />
       <Input label={t('promoCodes.fieldMaxUses')} value={maxUses} onChangeText={setMaxUses} keyboardType="numeric" />
+      <RestaurantPicker value={restaurantIds} onChange={setRestaurantIds} />
       <Button variant="primary" fullWidth onPress={handleSubmit}>
         {submitLabel}
       </Button>

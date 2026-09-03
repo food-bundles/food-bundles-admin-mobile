@@ -49,6 +49,10 @@ export function PromoCodeDetailSheet({ code, onClose }: PromoCodeDetailSheetProp
           <Row label={t('promoCodes.fieldMinOrder')} value={formatRwf(code.minOrder)} />
           <Row label={t('promoCodes.uses', { used: code.usedCount, max: code.maxUses })} value="" />
           <Row label={t('promoCodes.fieldExpiry')} value={formatDate(code.expiresAt, language)} />
+          <Row
+            label={t('promoCodes.fieldRestaurants')}
+            value={code.restaurantIds === null ? t('promoCodes.allRestaurants') : t('promoCodes.restaurantsSelected', { count: code.restaurantIds.length })}
+          />
 
           <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('promoCodes.usageAnalytics')}</Text>
           <BarChart data={usageByDay} colorKey="leaf" height={120} />
