@@ -1,81 +1,163 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { space, text, useTheme } from '@/theme';
-import { useT, useLanguageStore } from '@/i18n';
+import { Ionicons } from '@expo/vector-icons';
+import { hit, radius, shadow, space, text, useTheme } from '@/theme';
+import { useT } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
-import { formatDate } from '@/lib/date';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
+import { ExpandRow } from '@/components/data/ExpandRow';
+import { MultiSeriesAreaChart, type MultiSeriesDatum, type MultiSeriesSpec } from '@/components/charts/MultiSeriesAreaChart';
+import { BarChart } from '@/components/charts/BarChart';
+import { Sparkline } from '@/components/charts/Sparkline';
+import { COMMODITIES, MOCK_MARKET_PRICE_SERIES, computeMovingAverage7, type CommodityId } from '@/mocks/market-prices';
 import { MOCK_MARKETS } from '@/mocks/markets';
-import { MOCK_PRODUCTS } from '@/mocks/products';
-import { MOCK_MARKET_PRICES } from '@/mocks/market-prices';
 
-/** Commodity × market grid: latest price + date per cell, filterable by market or commodity. */
+type RangeKey = 'day' | 'week' | 'month' | 'quarter';
+const RANGE_DAYS: Record<RangeKey, number> = { day: 1, week: 7, month: 30, quarter: 30 };
+
+const MARKET_SERIES_SPEC: MultiSeriesSpec[] = [
+  { key: 'mkt-001', colorKey: 'leaf' },
+  { key: 'mkt-002', colorKey: 'marigold', dashed: true },
+  { key: 'mkt-003', colorKey: 'muted', dashed: true },
+  { key: 'mkt-004', colorKey: 'pine', dashed: true },
+  { key: 'mkt-005', colorKey: 'ripe', dashed: true },
+];
+
+/** Commodity selector + hero multi-series overlay chart + volume bars + 7-day MA toggle + record-price FAB. */
 export function PricesTab() {
   const { colors } = useTheme();
   const t = useT();
-  const language = useLanguageStore((state) => state.language);
-  const [marketFilter, setMarketFilter] = useState<string>('ALL');
+  const [commodityId, setCommodityId] = useState<CommodityId>(COMMODITIES[0].id);
+  const [range, setRange] = useState<RangeKey>('week');
+  const [showMa, setShowMa] = useState(false);
+  const [expandedMarketId, setExpandedMarketId] = useState<string | null>(null);
 
-  const trackedProductIds = [...new Set(MOCK_MARKET_PRICES.map((s) => s.productId))];
-  const products = MOCK_PRODUCTS.filter((p) => trackedProductIds.includes(p.id));
-  const markets = marketFilter === 'ALL' ? MOCK_MARKETS : MOCK_MARKETS.filter((m) => m.id === marketFilter);
+  const commodity = COMMODITIES.find((c) => c.id === commodityId) ?? COMMODITIES[0];
+  const seriesForCommodity = MOCK_MARKET_PRICE_SERIES.filter((s) => s.commodityId === commodityId);
+  const daysWindow = RANGE_DAYS[range];
 
-  const marketChips: FilterChip[] = [
-    { key: 'ALL', label: t('orders.filterAll') },
-    ...MOCK_MARKETS.map((m) => ({ key: m.id, label: m.name })),
+  const chartData: MultiSeriesDatum[] = useMemo(() => {
+    const foodBundles = seriesForCommodity.find((s) => s.marketId === 'mkt-001');
+    const length = foodBundles?.days.length ?? 0;
+    const slice = Math.min(daysWindow, length);
+    return Array.from({ length: slice }, (_, i) => {
+      const idx = length - slice + i;
+      const point: MultiSeriesDatum = { x: i };
+      for (const series of seriesForCommodity) {
+        point[series.marketId] = series.days[idx]?.close ?? 0;
+      }
+      return point;
+    });
+  }, [seriesForCommodity, daysWindow]);
+
+  const foodBundlesSeries = seriesForCommodity.find((s) => s.marketId === 'mkt-001');
+  const maValues = foodBundlesSeries ? computeMovingAverage7(foodBundlesSeries.days) : [];
+  const maChartData = showMa
+    ? chartData.map((point, i) => {
+        const idx = (foodBundlesSeries?.days.length ?? 0) - chartData.length + i;
+        return { ...point, ma: maValues[idx] ?? point['mkt-001'] };
+      })
+    : chartData;
+  const maSpec: MultiSeriesSpec[] = showMa
+    ? [...MARKET_SERIES_SPEC, { key: 'ma', colorKey: 'marigold', dashed: true }]
+    : MARKET_SERIES_SPEC;
+
+  const volumeData = (foodBundlesSeries?.days ?? []).slice(-daysWindow).map((d, i) => ({ x: i, y: d.volume }));
+
+  const commodityChips: FilterChip[] = COMMODITIES.map((c) => ({ key: c.id, label: c.name }));
+  const rangeChips: FilterChip[] = [
+    { key: 'day', label: t('markets.rangeDay') },
+    { key: 'week', label: t('markets.rangeWeek') },
+    { key: 'month', label: t('markets.rangeMonth') },
+    { key: 'quarter', label: t('markets.rangeQuarter') },
   ];
 
   return (
     <View style={styles.container}>
-      <FilterBar chips={marketChips} activeKey={marketFilter} onSelect={setMarketFilter} />
-      {products.map((product) => (
-        <View key={product.id} style={styles.productSection}>
-          <Text style={[styles.productName, { color: colors.ink }]}>{product.name}</Text>
-          <Card>
-            {markets.map((market, index) => {
-              const series = MOCK_MARKET_PRICES.find((s) => s.marketId === market.id && s.productId === product.id);
-              const latest = series?.days[series.days.length - 1];
-              return (
-                <View
-                  key={market.id}
-                  style={[styles.row, index < markets.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.hairline }]}
-                >
-                  <View style={styles.textCol}>
-                    <Text style={[styles.marketName, { color: colors.ink }]}>{market.name}</Text>
-                    {latest ? (
-                      <Text style={[styles.detail, { color: colors.muted }]}>
-                        {t('markets.latestPrice', { price: formatRwf(latest.close) })} · {formatDate(latest.date, language)}
-                      </Text>
-                    ) : (
-                      <Text style={[styles.detail, { color: colors.muted }]}>{t('markets.noRecentPrice')}</Text>
-                    )}
+      <FilterBar chips={commodityChips} activeKey={commodityId} onSelect={(key) => setCommodityId(key as CommodityId)} />
+      <FilterBar chips={rangeChips} activeKey={range} onSelect={(key) => setRange(key as RangeKey)} />
+
+      <Card>
+        <MultiSeriesAreaChart data={maChartData} series={maSpec} heroKey="mkt-001" height={220} />
+        <Pressable
+          onPress={() => setShowMa((v) => !v)}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: showMa }}
+          accessibilityLabel={t('markets.showMovingAverage')}
+          style={styles.maToggle}
+        >
+          <Ionicons name={showMa ? 'checkbox' : 'square-outline'} size={20} color={colors.leaf} />
+          <Text style={[styles.maLabel, { color: colors.ink }]}>{t('markets.showMovingAverage')}</Text>
+        </Pressable>
+
+        <View style={styles.legend}>
+          {MARKET_SERIES_SPEC.map((spec) => {
+            const market = MOCK_MARKETS.find((m) => m.id === spec.key);
+            const marketDays = seriesForCommodity.find((s) => s.marketId === spec.key)?.days ?? [];
+            const latest = marketDays.slice(-1)[0]?.close ?? 0;
+            const sparklineData = marketDays.slice(-5).map((d, i) => ({ x: i, y: d.close }));
+            return (
+              <ExpandRow
+                key={spec.key}
+                expanded={expandedMarketId === spec.key}
+                onToggle={() => setExpandedMarketId((prev) => (prev === spec.key ? null : spec.key))}
+                accessibilityLabel={market?.name ?? spec.key}
+                header={
+                  <View style={styles.legendRow}>
+                    <View style={[styles.dot, { backgroundColor: colors[spec.colorKey] }]} />
+                    <Text style={[styles.legendName, { color: colors.body }]}>{market?.name}</Text>
+                    <Text style={[styles.legendValue, { color: colors.ink }]}>{formatRwf(latest)}</Text>
                   </View>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onPress={() => router.push(`/(admin)/markets/${market.id}/record-price?productId=${product.id}`)}
-                  >
-                    {t('markets.recordPrice')}
-                  </Button>
+                }
+              >
+                <View style={styles.sparklineRow}>
+                  <Text style={[styles.legendName, { color: colors.muted }]}>{t('markets.priceTrend')}</Text>
+                  <Sparkline data={sparklineData} colorKey={spec.colorKey} />
                 </View>
-              );
-            })}
-          </Card>
+              </ExpandRow>
+            );
+          })}
         </View>
-      ))}
+      </Card>
+
+      <Card>
+        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('markets.volume')}</Text>
+        <BarChart data={volumeData} colorKey="muted" height={120} />
+      </Card>
+
+      <Pressable
+        onPress={() => router.push(`/(admin)/markets/mkt-001/record-price?productId=${commodity.productId}`)}
+        accessibilityRole="button"
+        accessibilityLabel={t('markets.recordPriceFab')}
+        style={[styles.fab, shadow.elevated, { backgroundColor: colors.leaf }]}
+      >
+        <Ionicons name="add" size={26} color={colors.paper} />
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: space.md },
-  productSection: { gap: space.xs },
-  productName: { ...text.h3 },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: space.sm },
-  textCol: { flex: 1 },
-  marketName: { ...text.bodySemi },
-  detail: { ...text.caption, marginTop: 2 },
+  container: { gap: space.md, paddingBottom: space.xxxl },
+  sectionTitle: { ...text.h3, marginBottom: space.sm },
+  maToggle: { flexDirection: 'row', alignItems: 'center', gap: space.xs, marginTop: space.sm, minHeight: hit.min },
+  maLabel: { ...text.body },
+  legend: { marginTop: space.md, gap: space.xs },
+  legendRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingVertical: 4 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
+  legendName: { ...text.body, flex: 1 },
+  legendValue: { ...text.bodySemi },
+  sparklineRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: space.lg },
+  fab: {
+    position: 'absolute',
+    right: space.lg,
+    bottom: space.lg,
+    width: 56,
+    height: 56,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

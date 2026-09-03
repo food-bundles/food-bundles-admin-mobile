@@ -6,7 +6,8 @@ import { useT } from '@/i18n';
 import { DataList } from '@/components/data/DataList';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { MOCK_CAMPAIGNS, type CampaignStatus } from '@/mocks/newsletter';
+import { useNewsletterStore } from '@/stores/newsletterStore';
+import type { CampaignStatus } from '@/mocks/newsletter';
 
 const STATUS_TONE: Record<CampaignStatus, 'neutral' | 'leaf' | 'chili'> = { DRAFT: 'neutral', SENT: 'leaf', FAILED: 'chili' };
 
@@ -14,10 +15,11 @@ const STATUS_TONE: Record<CampaignStatus, 'neutral' | 'leaf' | 'chili'> = { DRAF
 export function CampaignsTab() {
   const { colors } = useTheme();
   const t = useT();
+  const campaigns = useNewsletterStore((state) => state.campaigns);
 
   return (
     <DataList
-      data={MOCK_CAMPAIGNS}
+      data={campaigns}
       renderItem={({ item }) => (
         <Card onPress={() => router.push(`/(admin)/newsletter/campaigns/${item.id}`)} accessibilityLabel={item.subject}>
           <View style={styles.row}>
@@ -33,7 +35,7 @@ export function CampaignsTab() {
       )}
       keyExtractor={(item) => item.id}
       isLoading={false}
-      isEmpty={MOCK_CAMPAIGNS.length === 0}
+      isEmpty={campaigns.length === 0}
       emptyTitle={t('newsletter.emptyCampaignsTitle')}
       emptyMessage={t('newsletter.emptyCampaignsMessage')}
       emptyIcon={<Ionicons name="megaphone-outline" size={20} color={colors.leaf} />}

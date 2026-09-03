@@ -5,11 +5,13 @@ import { useT } from '@/i18n';
 import { useRoleGuard } from '@/lib/roleGuard';
 import { shareCsv } from '@/lib/exportCsv';
 import { AdminScreen } from '@/components/layout/AdminScreen';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
 import { DateRangePicker } from '@/components/forms/DateRangePicker';
-import { generateReport, type ReportSummary, type ReportType } from './_components/reportGenerators';
+import { generateReport, type ReportType } from './_components/reportGenerators';
+import { SalesSummaryReport } from './_components/SalesSummaryReport';
+import { StockMovementReport } from './_components/StockMovementReport';
+import { MarketComparisonReport } from './_components/MarketComparisonReport';
 
 type RangeKey = 'week' | 'month' | 'custom';
 
@@ -21,7 +23,14 @@ function presetRange(key: 'week' | 'month', now: Date): { from: Date; to: Date }
   return { from, to };
 }
 
-/** Date range (week/month/custom) + report type select, "Generate" → summary card, export via share sheet. */
+/**
+ * Full F&B Reports: date range (this week default) + report type selector, each type rendering a
+ * real chart-driven view (SalesSummaryReport / StockMovementReport / MarketComparisonReport)
+ * instead of the previous generic 3-line summary card. Export shares a mock CSV; Refresh just
+ * re-evaluates the generators against the current mock data (there is nothing to actually
+ * re-fetch — this is a fully mocked app — so "refresh" resets the range to its default and
+ * re-renders, which is the honest equivalent).
+ */
 export default function FbReportsScreen() {
   useRoleGuard('stock');
   const { colors } = useTheme();
@@ -29,7 +38,8 @@ export default function FbReportsScreen() {
   const [range, setRange] = useState<RangeKey>('week');
   const [customRange, setCustomRange] = useState(() => presetRange('week', new Date()));
   const [reportType, setReportType] = useState<ReportType>('SALES_SUMMARY');
-  const [summary, setSummary] = useState<ReportSummary | null>(null);
+
+  const { from, to } = range === 'custom' ? customRange : presetRange(range === 'month' ? 'month' : 'week', new Date());
 
   const rangeChips: FilterChip[] = [
     { key: 'week', label: t('fbReports.dateRangeThisWeek') },
@@ -42,15 +52,25 @@ export default function FbReportsScreen() {
     { key: 'MARKET_COMPARISON', label: t('fbReports.typeMarketComparison') },
   ];
 
-  const handleGenerate = () => {
-    const { from, to } = range === 'custom' ? customRange : presetRange(range, new Date());
-    setSummary(generateReport(reportType, from, to));
+  const handleExport = () => {
+    const summary = generateReport(reportType, from, to);
+    shareCsv('fb-report.csv', summary.csv);
+  };
+
+  const handleRefresh = () => {
+    setRange('week');
+    setCustomRange(presetRange('week', new Date()));
   };
 
   return (
     <AdminScreen title={t('fbReports.title')}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('fbReports.dateRangeThisWeek')}</Text>
+        <View style={styles.headerRow}>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('fbReports.dateRangeThisWeek')}</Text>
+          <Button variant="ghost" size="sm" onPress={handleRefresh}>
+            {t('common.refresh')}
+          </Button>
+        </View>
         <FilterBar chips={rangeChips} activeKey={range} onSelect={(key) => setRange(key as RangeKey)} />
         {range === 'custom' ? (
           <DateRangePicker
@@ -66,46 +86,23 @@ export default function FbReportsScreen() {
         <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('fbReports.reportType')}</Text>
         <FilterBar chips={typeChips} activeKey={reportType} onSelect={(key) => setReportType(key as ReportType)} />
 
-        <View style={styles.generateWrap}>
-          <Button variant="primary" fullWidth onPress={handleGenerate}>
-            {t('fbReports.generate')}
-          </Button>
+        <View style={styles.reportWrap}>
+          {reportType === 'SALES_SUMMARY' ? <SalesSummaryReport from={from} to={to} /> : null}
+          {reportType === 'STOCK_MOVEMENT' ? <StockMovementReport from={from} to={to} /> : null}
+          {reportType === 'MARKET_COMPARISON' ? <MarketComparisonReport /> : null}
         </View>
 
-        {summary ? (
-          <View style={styles.summaryWrap}>
-            <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('fbReports.summaryTitle')}</Text>
-            <Card>
-              <SummaryRow label={t('fbReports.totalOrders')} value={String(summary.totalOrders)} />
-              <SummaryRow label={t('fbReports.totalRevenue')} value={summary.totalRevenue} />
-              <SummaryRow label={t('fbReports.avgOrderValue')} value={summary.avgOrderValue} />
-            </Card>
-            <Button variant="secondary" fullWidth onPress={() => shareCsv('fb-report.csv', summary.csv)}>
-              {t('common.export')}
-            </Button>
-          </View>
-        ) : null}
+        <Button variant="secondary" fullWidth onPress={handleExport}>
+          {t('common.export')}
+        </Button>
       </ScrollView>
     </AdminScreen>
   );
 }
 
-function SummaryRow({ label, value }: { label: string; value: string }) {
-  const { colors } = useTheme();
-  return (
-    <View style={styles.row}>
-      <Text style={[styles.rowLabel, { color: colors.muted }]}>{label}</Text>
-      <Text style={[styles.rowValue, { color: colors.ink }]}>{value}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl, gap: space.md },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   sectionTitle: { ...text.h3 },
-  generateWrap: { marginTop: space.md },
-  summaryWrap: { gap: space.md },
-  row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: space.xs },
-  rowLabel: { ...text.body },
-  rowValue: { ...text.bodySemi },
+  reportWrap: { marginTop: space.sm },
 });

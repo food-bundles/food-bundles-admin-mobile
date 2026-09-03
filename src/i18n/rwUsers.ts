@@ -53,6 +53,12 @@ export const rwUsers: Record<keyof typeof enUsers, string> = {
   'affiliators.roleOwner': 'Nyir’ubwite',
   'affiliators.roleManager': 'Umuyobozi',
   'affiliators.roleStaff': 'Umukozi',
+  'affiliators.create': 'Ongeraho umufatanyabikorwa',
+  'affiliators.createTitle': 'Ongeraho umufatanyabikorwa',
+  'affiliators.fieldRestaurant': 'Resitora',
+  'affiliators.fieldRestaurantSearch': 'Shakisha resitora',
+  'affiliators.fieldRole': 'Uruhare',
+  'affiliators.selectRestaurantFirst': 'Hitamo resitora kugira ngo ukomeze.',
 
   'admins.title': 'Abayobozi',
   'admins.searchPlaceholder': 'Shakisha izina cyangwa imeyili',

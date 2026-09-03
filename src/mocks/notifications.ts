@@ -157,7 +157,7 @@ export const MOCK_NOTIFICATIONS: AdminNotification[] = [
     id: 'notif-015',
     channel: 'vouchers',
     title: 'Loan disbursed',
-    body: 'Nyamirambo Kitchen\'s approved loan was disbursed as a DISCOUNT_10 voucher.',
+    body: 'Nyamirambo Kitchen\'s approved loan application was disbursed as a voucher.',
     deepLink: '/(admin)/vouchers/loanapp-003',
     timestamp: '2026-07-16T09:00:00Z',
     read: true,

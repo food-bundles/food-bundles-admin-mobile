@@ -1,0 +1,38 @@
+/** Kinyarwanda translations for enBranding.ts. */
+export const rwBranding = {
+  'splash.appName': 'FoodBundles Admin',
+  'splash.tagline': "Gutera imbaraga uruhererekane rw'umusaruro mu Rwanda",
+
+  'tab.overview': 'Incamake',
+  'tab.orders': 'Ibyifuzo',
+  'tab.users': 'Abakoresha',
+  'tab.stock': 'Ububiko',
+  'tab.markets': 'Amasoko',
+  'tab.reports': 'Raporo',
+  'tab.account': 'Konti',
+  'tab.aiSupport': 'Ubufasha bwa AI',
+
+  'account.title': 'Konti',
+  'account.myProfile': 'Umwirondoro wanjye',
+  'account.changePassword': 'Hindura ijambo ry\'ibanga',
+  'account.changePasswordSent': 'Ihinduka ry\'ijambo ry\'ibanga ryoherejwe kuri email',
+  'account.theme': 'Insanganyamatsiko',
+  'account.themeLight': 'Umucyo',
+  'account.themeDark': 'Umwijima',
+  'account.themeSystem': 'Sisitemu',
+  'account.language': 'Ururimi',
+  'account.signOut': 'Sohoka',
+  'account.signOutConfirm': 'Sohoka muri FoodBundles Admin?',
+
+  'profile.title': 'Umwirondoro wanjye',
+  'profile.name': 'Amazina',
+  'profile.email': 'Email',
+  'profile.phone': 'Telefoni',
+  'profile.role': 'Uruhare',
+  'profile.twoFactorEnabled': '2FA irakora',
+  'profile.twoFactorDisabled': '2FA ntabwo ikora',
+  'profile.manage2fa': 'Gucunga umwirondoro w\'umutekano',
+  'profile.saveChanges': 'Bika impinduka',
+  'profile.saved': 'Umwirondoro wavuguruwe',
+  'profile.changePhoto': 'Hindura ifoto',
+} as const;

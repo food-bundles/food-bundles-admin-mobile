@@ -40,6 +40,7 @@ const SECTIONS: DrawerSection[] = [
     ],
   },
   { titleKey: 'nav.markets', items: [{ labelKey: 'market.pricing', route: '/(admin)/markets', section: 'markets' }] },
+  { titleKey: 'nav.messages', items: [{ labelKey: 'nav.messages', route: '/(admin)/messages', section: 'operations' }] },
   {
     titleKey: 'section.financial',
     items: [

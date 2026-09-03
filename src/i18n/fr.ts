@@ -7,6 +7,21 @@ import { frFinancial } from './frFinancial';
 import { frOperations } from './frOperations';
 import { frSettings } from './frSettings';
 import { frNotifications } from './frNotifications';
+import { frConsent } from './frConsent';
+import { frBranding } from './frBranding';
+import { frExpand } from './frExpand';
+import { frOrderBehalf } from './frOrderBehalf';
+import { frImages } from './frImages';
+import { frProductDetail } from './frProductDetail';
+import { frReports } from './frReports';
+import { frFinancialBehalf } from './frFinancialBehalf';
+import { frContactChat } from './frContactChat';
+import { frRecipientHistory } from './frRecipientHistory';
+import { frNewsletterDetail } from './frNewsletterDetail';
+import { frTeamTwoFa } from './frTeamTwoFa';
+import { frChat } from './frChat';
+import { frOpsAssistant } from './frOpsAssistant';
+import { frMessages } from './frMessages';
 
 type ChromeKey = Exclude<
   keyof typeof enTable,
@@ -18,6 +33,21 @@ type ChromeKey = Exclude<
   | keyof typeof frOperations
   | keyof typeof frSettings
   | keyof typeof frNotifications
+  | keyof typeof frConsent
+  | keyof typeof frBranding
+  | keyof typeof frExpand
+  | keyof typeof frOrderBehalf
+  | keyof typeof frImages
+  | keyof typeof frProductDetail
+  | keyof typeof frReports
+  | keyof typeof frFinancialBehalf
+  | keyof typeof frContactChat
+  | keyof typeof frRecipientHistory
+  | keyof typeof frNewsletterDetail
+  | keyof typeof frTeamTwoFa
+  | keyof typeof frChat
+  | keyof typeof frOpsAssistant
+  | keyof typeof frMessages
 >;
 
 const frChrome: Record<ChromeKey, string> = {
@@ -115,4 +145,19 @@ export const fr: Record<keyof typeof enTable, string> = {
   ...frOperations,
   ...frSettings,
   ...frNotifications,
+  ...frConsent,
+  ...frBranding,
+  ...frExpand,
+  ...frOrderBehalf,
+  ...frImages,
+  ...frProductDetail,
+  ...frReports,
+  ...frFinancialBehalf,
+  ...frContactChat,
+  ...frRecipientHistory,
+  ...frNewsletterDetail,
+  ...frTeamTwoFa,
+  ...frChat,
+  ...frOpsAssistant,
+  ...frMessages,
 };

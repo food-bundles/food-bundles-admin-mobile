@@ -7,6 +7,21 @@ import { rwFinancial } from './rwFinancial';
 import { rwOperations } from './rwOperations';
 import { rwSettings } from './rwSettings';
 import { rwNotifications } from './rwNotifications';
+import { rwConsent } from './rwConsent';
+import { rwBranding } from './rwBranding';
+import { rwExpand } from './rwExpand';
+import { rwOrderBehalf } from './rwOrderBehalf';
+import { rwImages } from './rwImages';
+import { rwProductDetail } from './rwProductDetail';
+import { rwReports } from './rwReports';
+import { rwFinancialBehalf } from './rwFinancialBehalf';
+import { rwContactChat } from './rwContactChat';
+import { rwRecipientHistory } from './rwRecipientHistory';
+import { rwNewsletterDetail } from './rwNewsletterDetail';
+import { rwTeamTwoFa } from './rwTeamTwoFa';
+import { rwChat } from './rwChat';
+import { rwOpsAssistant } from './rwOpsAssistant';
+import { rwMessages } from './rwMessages';
 
 type ChromeKey = Exclude<
   keyof typeof enTable,
@@ -18,6 +33,21 @@ type ChromeKey = Exclude<
   | keyof typeof rwOperations
   | keyof typeof rwSettings
   | keyof typeof rwNotifications
+  | keyof typeof rwConsent
+  | keyof typeof rwBranding
+  | keyof typeof rwExpand
+  | keyof typeof rwOrderBehalf
+  | keyof typeof rwImages
+  | keyof typeof rwProductDetail
+  | keyof typeof rwReports
+  | keyof typeof rwFinancialBehalf
+  | keyof typeof rwContactChat
+  | keyof typeof rwRecipientHistory
+  | keyof typeof rwNewsletterDetail
+  | keyof typeof rwTeamTwoFa
+  | keyof typeof rwChat
+  | keyof typeof rwOpsAssistant
+  | keyof typeof rwMessages
 >;
 
 const rwChrome: Record<ChromeKey, string> = {
@@ -115,4 +145,19 @@ export const rw: Record<keyof typeof enTable, string> = {
   ...rwOperations,
   ...rwSettings,
   ...rwNotifications,
+  ...rwConsent,
+  ...rwBranding,
+  ...rwExpand,
+  ...rwOrderBehalf,
+  ...rwImages,
+  ...rwProductDetail,
+  ...rwReports,
+  ...rwFinancialBehalf,
+  ...rwContactChat,
+  ...rwRecipientHistory,
+  ...rwNewsletterDetail,
+  ...rwTeamTwoFa,
+  ...rwChat,
+  ...rwOpsAssistant,
+  ...rwMessages,
 };

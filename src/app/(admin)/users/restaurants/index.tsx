@@ -29,6 +29,7 @@ export default function RestaurantsScreen() {
   const t = useT();
   const [filter, setFilter] = useState<FilterKey>('ALL');
   const [search, setSearch] = useState('');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -74,7 +75,13 @@ export default function RestaurantsScreen() {
       </View>
       <DataList
         data={list.items}
-        renderItem={({ item }) => <RestaurantRow restaurant={item} />}
+        renderItem={({ item }) => (
+          <RestaurantRow
+            restaurant={item}
+            expanded={expandedId === item.id}
+            onToggle={() => setExpandedId((prev) => (prev === item.id ? null : item.id))}
+          />
+        )}
         keyExtractor={(item) => item.id}
         isLoading={list.isLoading}
         isEmpty={!list.isLoading && list.items.length === 0}

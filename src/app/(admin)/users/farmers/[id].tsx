@@ -40,7 +40,7 @@ export default function FarmerDetailScreen() {
   const products = [...farmer.products, ...extraProducts];
 
   return (
-    <AdminScreen title={farmer.name}>
+    <AdminScreen title={farmer.name} showBack>
       <ScrollView contentContainerStyle={styles.content}>
         <Image source={{ uri: farmer.imageUri }} style={styles.photo} />
 

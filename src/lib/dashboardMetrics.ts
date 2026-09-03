@@ -1,6 +1,6 @@
 import { MOCK_ORDERS } from '@/mocks/orders';
 import { MOCK_RESTAURANTS } from '@/mocks/restaurants';
-import { MOCK_LOAN_APPLICATIONS } from '@/mocks/loans';
+import { MOCK_LOAN_APPLICATIONS } from '@/mocks/loanApplications';
 import { MOCK_FARMER_SUBMISSIONS } from '@/mocks/farmer-submissions';
 import { MOCK_CONTACT_SUBMISSIONS } from '@/mocks/contact-submissions';
 

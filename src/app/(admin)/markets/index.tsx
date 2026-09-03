@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { space } from '@/theme';
 import { useT } from '@/i18n';
 import { useRoleGuard } from '@/lib/roleGuard';
@@ -10,11 +11,16 @@ import { PricesTab } from './_components/PricesTab';
 import { AnalysisTab } from './_components/AnalysisTab';
 import { ComparisonTab } from './_components/ComparisonTab';
 
-/** Market Pricing: Markets | Prices | Analysis | Comparison tabs. Built from markets/page.tsx. */
+const VALID_TABS: MarketTabKey[] = ['markets', 'prices', 'analysis', 'comparison'];
+
+/** Market Pricing: Markets | Prices | Analysis | Comparison tabs. Built from markets/page.tsx. Accepts an optional `?tab=` deep link (e.g. from the dashboard market widget). */
 export default function MarketsScreen() {
   useRoleGuard('markets');
   const t = useT();
-  const [tab, setTab] = useState<MarketTabKey>('markets');
+  const { tab: initialTab } = useLocalSearchParams<{ tab?: string }>();
+  const [tab, setTab] = useState<MarketTabKey>(
+    VALID_TABS.includes(initialTab as MarketTabKey) ? (initialTab as MarketTabKey) : 'markets',
+  );
 
   return (
     <AdminScreen title={t('markets.title')}>

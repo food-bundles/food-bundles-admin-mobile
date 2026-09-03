@@ -1,0 +1,38 @@
+/** French translations for enBranding.ts. */
+export const frBranding = {
+  'splash.appName': 'FoodBundles Admin',
+  'splash.tagline': "Alimenter la chaîne d'approvisionnement du Rwanda",
+
+  'tab.overview': 'Aperçu',
+  'tab.orders': 'Commandes',
+  'tab.users': 'Utilisateurs',
+  'tab.stock': 'Stock',
+  'tab.markets': 'Marchés',
+  'tab.reports': 'Rapports',
+  'tab.account': 'Compte',
+  'tab.aiSupport': 'Assistant IA',
+
+  'account.title': 'Compte',
+  'account.myProfile': 'Mon profil',
+  'account.changePassword': 'Changer le mot de passe',
+  'account.changePasswordSent': 'Lien de changement de mot de passe envoyé par email',
+  'account.theme': 'Thème',
+  'account.themeLight': 'Clair',
+  'account.themeDark': 'Sombre',
+  'account.themeSystem': 'Système',
+  'account.language': 'Langue',
+  'account.signOut': 'Déconnexion',
+  'account.signOutConfirm': 'Se déconnecter de FoodBundles Admin ?',
+
+  'profile.title': 'Mon profil',
+  'profile.name': 'Nom',
+  'profile.email': 'Email',
+  'profile.phone': 'Téléphone',
+  'profile.role': 'Rôle',
+  'profile.twoFactorEnabled': '2FA activée',
+  'profile.twoFactorDisabled': '2FA non activée',
+  'profile.manage2fa': "Gérer l'authentificateur",
+  'profile.saveChanges': 'Enregistrer les modifications',
+  'profile.saved': 'Profil mis à jour',
+  'profile.changePhoto': 'Changer la photo',
+} as const;

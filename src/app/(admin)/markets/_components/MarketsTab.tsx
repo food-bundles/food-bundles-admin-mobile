@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { space, text, useTheme } from '@/theme';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { radius, space, text, useTheme } from '@/theme';
 import { useT } from '@/i18n';
 import { useAuthStore } from '@/stores/authStore';
 import { Card } from '@/components/ui/Card';
@@ -11,6 +11,15 @@ import { MOCK_MARKETS, type Market } from '@/mocks/markets';
 import { MarketSheet } from './MarketSheet';
 
 const CAN_EDIT_ROLES = ['SUPERUSER', 'ADMIN'];
+
+/** Exact per-market thumbnails specified for the Markets tab. */
+const MARKET_IMAGE: Record<string, string> = {
+  'mkt-001': 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=112',
+  'mkt-002': 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=112',
+  'mkt-003': 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=112',
+  'mkt-004': 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=112',
+  'mkt-005': 'https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=112',
+};
 
 /** List of markets + edit/delete (ADMIN+) + "Add market". */
 export function MarketsTab() {
@@ -43,6 +52,11 @@ export function MarketsTab() {
       {markets.map((market) => (
         <Card key={market.id} accessibilityLabel={market.name}>
           <View style={styles.row}>
+            <Image
+              source={{ uri: MARKET_IMAGE[market.id] ?? MARKET_IMAGE['mkt-005'] }}
+              style={styles.logo}
+              accessibilityLabel={market.name}
+            />
             <View style={styles.textCol}>
               <Text style={[styles.name, { color: colors.ink }]}>{market.name}</Text>
               <Text style={[styles.detail, { color: colors.muted }]}>
@@ -103,7 +117,8 @@ export function MarketsTab() {
 
 const styles = StyleSheet.create({
   container: { gap: space.sm },
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: space.sm, justifyContent: 'space-between' },
+  logo: { width: 56, height: 56, borderRadius: radius.md },
   textCol: { flex: 1 },
   name: { ...text.bodySemi },
   detail: { ...text.caption, marginTop: 2 },

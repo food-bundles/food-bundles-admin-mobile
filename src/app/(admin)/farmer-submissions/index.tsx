@@ -7,7 +7,8 @@ import { useRoleGuard } from '@/lib/roleGuard';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { DataList } from '@/components/data/DataList';
 import { FilterBar, type FilterChip } from '@/components/data/FilterBar';
-import { MOCK_FARMER_SUBMISSIONS, type SubmissionStatus } from '@/mocks/farmer-submissions';
+import { useFarmerSubmissionsStore } from '@/stores/farmerSubmissionsStore';
+import type { SubmissionStatus } from '@/mocks/farmer-submissions';
 import { SubmissionRow } from './_components/SubmissionRow';
 
 /** Farmer submissions: filters Pending | Approved | Rejected | Verified. */
@@ -16,8 +17,12 @@ export default function FarmerSubmissionsScreen() {
   const { colors } = useTheme();
   const t = useT();
   const [filter, setFilter] = useState<SubmissionStatus | 'ALL'>('ALL');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const submissions = useFarmerSubmissionsStore((state) => state.submissions);
+  const getEffective = useFarmerSubmissionsStore((state) => state.getEffective);
+  const effectiveSubmissions = submissions.map(getEffective);
 
-  const filtered = filter === 'ALL' ? MOCK_FARMER_SUBMISSIONS : MOCK_FARMER_SUBMISSIONS.filter((s) => s.status === filter);
+  const filtered = filter === 'ALL' ? effectiveSubmissions : effectiveSubmissions.filter((s) => s.status === filter);
 
   const chips: FilterChip[] = [
     { key: 'ALL', label: t('orders.filterAll') },
@@ -34,7 +39,13 @@ export default function FarmerSubmissionsScreen() {
       </View>
       <DataList
         data={filtered}
-        renderItem={({ item }) => <SubmissionRow submission={item} />}
+        renderItem={({ item }) => (
+          <SubmissionRow
+            submission={item}
+            expanded={expandedId === item.id}
+            onToggle={() => setExpandedId((prev) => (prev === item.id ? null : item.id))}
+          />
+        )}
         keyExtractor={(item) => item.id}
         isLoading={false}
         isEmpty={filtered.length === 0}

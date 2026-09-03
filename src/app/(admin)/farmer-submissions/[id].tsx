@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { space, text, useTheme } from '@/theme';
+import { radius, space, text, useTheme } from '@/theme';
 import { useT, useLanguageStore, type TranslationKey } from '@/i18n';
 import { formatRwf } from '@/lib/formatRwf';
 import { formatDate } from '@/lib/date';
 import { useRoleGuard } from '@/lib/roleGuard';
+import { qualityPhotosFor } from '@/lib/qualityPhotos';
 import { AdminScreen } from '@/components/layout/AdminScreen';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Card } from '@/components/ui/Card';
@@ -13,8 +14,11 @@ import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
-import { MOCK_FARMER_SUBMISSIONS, type SubmissionStatus } from '@/mocks/farmer-submissions';
+import { useFarmerSubmissionsStore, type SubmissionGrade } from '@/stores/farmerSubmissionsStore';
 import { MOCK_FARMERS } from '@/mocks/farmers';
+import { GradeSelector } from './_components/GradeSelector';
+import { PriceNegotiationCard } from './_components/PriceNegotiationCard';
+import { SubmissionHeaderImage } from './_components/SubmissionHeaderImage';
 
 const ACTION_TITLE_KEY: Record<'APPROVED' | 'REJECTED' | 'VERIFIED', TranslationKey> = {
   APPROVED: 'farmerSubmissions.approve',
@@ -29,11 +33,15 @@ export default function FarmerSubmissionDetailScreen() {
   const { colors } = useTheme();
   const t = useT();
   const language = useLanguageStore((state) => state.language);
-  const baseSubmission = useMemo(() => MOCK_FARMER_SUBMISSIONS.find((s) => s.id === id), [id]);
-  const [statusOverride, setStatusOverride] = useState<SubmissionStatus | null>(null);
+  const submissions = useFarmerSubmissionsStore((state) => state.submissions);
+  const getEffective = useFarmerSubmissionsStore((state) => state.getEffective);
+  const setStatus = useFarmerSubmissionsStore((state) => state.setStatus);
+  const baseSubmission = useMemo(() => submissions.find((s) => s.id === id), [submissions, id]);
   const [note, setNote] = useState('');
+  const [grade, setGrade] = useState<SubmissionGrade>('A');
+  const [counterOffer, setCounterOffer] = useState('');
   const [confirmAction, setConfirmAction] = useState<'APPROVED' | 'REJECTED' | 'VERIFIED' | null>(null);
-  const submission = baseSubmission && statusOverride ? { ...baseSubmission, status: statusOverride } : baseSubmission;
+  const submission = baseSubmission ? getEffective(baseSubmission) : undefined;
 
   if (!submission) {
     return (
@@ -46,51 +54,74 @@ export default function FarmerSubmissionDetailScreen() {
   const farmer = MOCK_FARMERS.find((f) => f.id === submission.farmerId);
 
   return (
-    <AdminScreen title={submission.productName}>
+    <AdminScreen title={submission.productName} showBack>
       <ScrollView contentContainerStyle={styles.content}>
-        {farmer ? (
-          <View style={styles.farmerRow}>
-            <Text style={[styles.farmerName, { color: colors.ink }]}>{farmer.name}</Text>
-            <Badge tone="leaf" label={farmer.farmName} />
+        <SubmissionHeaderImage productName={submission.productName} farmerName={farmer?.name ?? ''} />
+
+        <View style={styles.body}>
+          {farmer ? (
+            <View style={styles.farmerRow}>
+              <Badge tone="leaf" label={farmer.farmName} />
+            </View>
+          ) : null}
+
+          <Card>
+            <Text style={[styles.product, { color: colors.ink }]}>{submission.productName}</Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>
+              {t('farmerSubmissions.quantity')}: {submission.quantity} {submission.unit}
+            </Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>
+              {t('farmerSubmissions.pricePerUnit')}: {formatRwf(submission.pricePerUnit)}
+            </Text>
+            <Text style={[styles.detail, { color: colors.muted }]}>{formatDate(submission.submittedAt, language)}</Text>
+          </Card>
+
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('farmerSubmissions.qualityPhotos')}</Text>
+          <View style={styles.photoRow}>
+            {qualityPhotosFor(submission.productName).map((uri, index) => (
+              <Image
+                key={uri + index}
+                source={{ uri }}
+                style={[styles.photo, { backgroundColor: colors.neutral }]}
+                accessibilityLabel={`${submission.productName} quality photo ${index + 1}`}
+              />
+            ))}
           </View>
-        ) : null}
 
-        <Card>
-          <Text style={[styles.product, { color: colors.ink }]}>{submission.productName}</Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('farmerSubmissions.quantity')}: {submission.quantity} {submission.unit}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>
-            {t('farmerSubmissions.pricePerUnit')}: {formatRwf(submission.pricePerUnit)}
-          </Text>
-          <Text style={[styles.detail, { color: colors.muted }]}>{formatDate(submission.submittedAt, language)}</Text>
-        </Card>
+          <PriceNegotiationCard
+            productName={submission.productName}
+            requestedPrice={submission.pricePerUnit}
+            counterOffer={counterOffer}
+            onChangeCounterOffer={setCounterOffer}
+          />
 
-        <Text style={[styles.sectionTitle, { color: colors.ink }]}>{t('farmerSubmissions.qualityPhotos')}</Text>
-        <View style={styles.photoRow}>
-          {[0, 1, 2].map((index) => (
-            <View key={index} style={[styles.photoPlaceholder, { backgroundColor: colors.neutral }]} />
-          ))}
+          {submission.grade ? (
+            <View style={styles.gradeRow}>
+              <Text style={[styles.detail, { color: colors.muted }]}>{t('farmerSubmissions.gradeLabel')}:</Text>
+              <Badge tone={submission.grade === 'REJECTED' ? 'chili' : 'leaf'} label={submission.grade} />
+            </View>
+          ) : null}
+
+          {submission.status === 'PENDING' ? (
+            <View style={styles.actions}>
+              <Input label={t('farmerSubmissions.approveNote')} value={note} onChangeText={setNote} />
+              <GradeSelector value={grade} onChange={setGrade} />
+              <Button variant="primary" fullWidth onPress={() => setConfirmAction('APPROVED')}>
+                {t('farmerSubmissions.approve')}
+              </Button>
+              <Button variant="destructive" fullWidth onPress={() => setConfirmAction('REJECTED')}>
+                {t('farmerSubmissions.reject')}
+              </Button>
+            </View>
+          ) : null}
+          {submission.status === 'APPROVED' ? (
+            <View style={styles.actions}>
+              <Button variant="primary" fullWidth onPress={() => setConfirmAction('VERIFIED')}>
+                {t('farmerSubmissions.verify')}
+              </Button>
+            </View>
+          ) : null}
         </View>
-
-        {submission.status === 'PENDING' ? (
-          <View style={styles.actions}>
-            <Input label={t('farmerSubmissions.approveNote')} value={note} onChangeText={setNote} />
-            <Button variant="primary" fullWidth onPress={() => setConfirmAction('APPROVED')}>
-              {t('farmerSubmissions.approve')}
-            </Button>
-            <Button variant="destructive" fullWidth onPress={() => setConfirmAction('REJECTED')}>
-              {t('farmerSubmissions.reject')}
-            </Button>
-          </View>
-        ) : null}
-        {submission.status === 'APPROVED' ? (
-          <View style={styles.actions}>
-            <Button variant="primary" fullWidth onPress={() => setConfirmAction('VERIFIED')}>
-              {t('farmerSubmissions.verify')}
-            </Button>
-          </View>
-        ) : null}
       </ScrollView>
 
       <ConfirmDialog
@@ -100,7 +131,15 @@ export default function FarmerSubmissionDetailScreen() {
         confirmLabel={t('common.confirm')}
         variant={confirmAction === 'REJECTED' ? 'danger' : 'warning'}
         onConfirm={() => {
-          if (confirmAction) setStatusOverride(confirmAction);
+          if (confirmAction) {
+            const parsedCounter = Number(counterOffer);
+            setStatus(
+              submission.id,
+              confirmAction,
+              confirmAction === 'APPROVED' ? grade : undefined,
+              confirmAction === 'APPROVED' && parsedCounter > 0 ? parsedCounter : undefined,
+            );
+          }
           setConfirmAction(null);
         }}
         onCancel={() => setConfirmAction(null)}
@@ -110,13 +149,14 @@ export default function FarmerSubmissionDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: space.lg, paddingBottom: space.xxxl, gap: space.md },
+  content: { paddingBottom: space.xxxl },
+  body: { paddingHorizontal: space.lg, gap: space.md, marginTop: space.md },
   farmerRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  farmerName: { ...text.h3 },
   product: { ...text.bodySemi },
   detail: { ...text.caption, marginTop: space.xs },
   sectionTitle: { ...text.h3 },
   photoRow: { flexDirection: 'row', gap: space.sm },
-  photoPlaceholder: { width: 80, height: 80, borderRadius: 8 },
+  photo: { width: 80, height: 80, borderRadius: radius.sm },
+  gradeRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   actions: { gap: space.sm, marginTop: space.md },
 });

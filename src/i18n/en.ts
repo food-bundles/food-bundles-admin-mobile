@@ -6,6 +6,21 @@ import { enFinancial } from './enFinancial';
 import { enOperations } from './enOperations';
 import { enSettings } from './enSettings';
 import { enNotifications } from './enNotifications';
+import { enConsent } from './enConsent';
+import { enBranding } from './enBranding';
+import { enExpand } from './enExpand';
+import { enOrderBehalf } from './enOrderBehalf';
+import { enImages } from './enImages';
+import { enProductDetail } from './enProductDetail';
+import { enReports } from './enReports';
+import { enFinancialBehalf } from './enFinancialBehalf';
+import { enContactChat } from './enContactChat';
+import { enRecipientHistory } from './enRecipientHistory';
+import { enNewsletterDetail } from './enNewsletterDetail';
+import { enTeamTwoFa } from './enTeamTwoFa';
+import { enChat } from './enChat';
+import { enOpsAssistant } from './enOpsAssistant';
+import { enMessages } from './enMessages';
 
 const enChrome = {
   'nav.dashboard': 'Dashboard',
@@ -102,6 +117,21 @@ export const en = {
   ...enOperations,
   ...enSettings,
   ...enNotifications,
+  ...enConsent,
+  ...enBranding,
+  ...enExpand,
+  ...enOrderBehalf,
+  ...enImages,
+  ...enProductDetail,
+  ...enReports,
+  ...enFinancialBehalf,
+  ...enContactChat,
+  ...enRecipientHistory,
+  ...enNewsletterDetail,
+  ...enTeamTwoFa,
+  ...enChat,
+  ...enOpsAssistant,
+  ...enMessages,
 };
 
 export type TranslationKey = keyof typeof en;

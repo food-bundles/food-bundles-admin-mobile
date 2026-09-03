@@ -1,4 +1,4 @@
-export { space, radius, shadow, hit, ORDER_STATUS_TOKEN, ROLE_BADGE_TOKEN } from './tokens';
+export { space, radius, shadow, hit, ORDER_STATUS_TOKEN, ROLE_BADGE_TOKEN, VOUCHER_STATUS_TOKEN } from './tokens';
 export { font, text } from './typography';
 export { duration, easing, signatureDuration } from './motion';
 export { lightPalette, darkPalette } from './colors';

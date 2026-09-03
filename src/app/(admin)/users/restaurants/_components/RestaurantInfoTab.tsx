@@ -29,12 +29,14 @@ export function RestaurantInfoTab({ restaurant, onToggleSuspend }: RestaurantInf
   return (
     <View style={styles.container}>
       <ImageUpload uri={imageUri} onChange={setImageUri} shape="circle" accessibilityLabel={restaurant.name} />
-      <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
-      <Input label={t('restaurants.fieldTin')} value={restaurant.tin} onChangeText={() => undefined} editable={false} />
-      <Input label={t('auth.email')} value={email} onChangeText={setEmail} keyboardType="email-address" />
-      <Input label={t('restaurants.fieldPhone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
-      <Input label={t('restaurants.fieldAddress')} value={address} onChangeText={setAddress} />
-      <Input label={t('restaurants.fieldDistrict')} value={district} onChangeText={setDistrict} />
+      <View style={styles.fields}>
+        <Input label={t('restaurants.fieldName')} value={name} onChangeText={setName} />
+        <Input label={t('restaurants.fieldTin')} value={restaurant.tin} onChangeText={() => undefined} editable={false} />
+        <Input label={t('auth.email')} value={email} onChangeText={setEmail} keyboardType="email-address" />
+        <Input label={t('restaurants.fieldPhone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+        <Input label={t('restaurants.fieldAddress')} value={address} onChangeText={setAddress} />
+        <Input label={t('restaurants.fieldDistrict')} value={district} onChangeText={setDistrict} />
+      </View>
 
       <Button variant="destructive" fullWidth onPress={() => setConfirmOpen(true)}>
         {t(isActive ? 'restaurants.suspend' : 'restaurants.reactivate')}
@@ -58,4 +60,9 @@ export function RestaurantInfoTab({ restaurant, onToggleSuspend }: RestaurantInf
 
 const styles = StyleSheet.create({
   container: { gap: space.md, alignItems: 'center' },
+  // `container` centers the circular ImageUpload, but that alignItems: 'center' also shrink-wraps any
+  // child with no explicit width to its own content size — which was collapsing every Input down to a
+  // tiny box sized to its label/text instead of the full row width. Force the whole field stack to
+  // stretch to the container's width so each Input still gets flex: 1 internally as intended.
+  fields: { width: '100%', gap: space.md },
 });

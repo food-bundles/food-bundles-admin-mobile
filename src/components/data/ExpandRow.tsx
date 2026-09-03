@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { LayoutAnimation, Platform, Pressable, StyleSheet, UIManager, View } from 'react-native';
 import { space, useTheme } from '@/theme';
 
@@ -10,16 +9,25 @@ export interface ExpandRowProps {
   header: React.ReactNode;
   children: React.ReactNode;
   accessibilityLabel: string;
+  /** Controlled from the parent list so only one row can be expanded at a time. */
+  expanded: boolean;
+  onToggle: () => void;
 }
 
-/** Accordion row: tapping the header toggles the panel below it. */
-export function ExpandRow({ header, children, accessibilityLabel }: ExpandRowProps) {
+/**
+ * Accordion row: tapping the header toggles the panel below it. Deliberately controlled (not
+ * internal state) so a parent list screen can enforce "only one row expanded at a time" per the
+ * motion skill's row-expand spec. Animates via LayoutAnimation.easeInEaseOut, 220ms.
+ */
+export function ExpandRow({ header, children, accessibilityLabel, expanded, onToggle }: ExpandRowProps) {
   const { colors } = useTheme();
-  const [expanded, setExpanded] = useState(false);
 
   const toggle = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded((prev) => !prev);
+    LayoutAnimation.configureNext({
+      duration: 220,
+      update: { type: LayoutAnimation.Types.easeInEaseOut },
+    });
+    onToggle();
   };
 
   return (

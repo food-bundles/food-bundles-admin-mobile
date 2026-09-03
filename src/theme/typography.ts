@@ -1,9 +1,13 @@
+import { Platform } from 'react-native';
+
 export const font = {
   displayBold: 'SpaceGrotesk_700Bold',
   displaySemi: 'SpaceGrotesk_600SemiBold',
   bodyRegular: 'IBMPlexSans_400Regular',
   bodyMedium: 'IBMPlexSans_500Medium',
   bodySemi: 'IBMPlexSans_600SemiBold',
+  /** Permitted off-token exception (design-system skill): receipt/code monospace font. */
+  monospace: Platform.OS === 'ios' ? 'Courier New' : 'monospace',
 } as const;
 
 export const text = {
